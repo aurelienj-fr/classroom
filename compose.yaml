@@ -1,0 +1,37 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "mysql://${MYSQL_USER:-app}:${MYSQL_PASSWORD:-ChangeMe}@database:3306/${MYSQL_DATABASE:-monstudio}?serverVersion=8.4.0&charset=utf8mb4"
+    volumes:
+      - ./:/var/www/html:rw
+
+###> doctrine/doctrine-bundle ###
+  database:
+    image: mysql:${MYSQL_VERSION:-8.4}
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-monstudio}
+      MYSQL_USER: ${MYSQL_USER:-app}
+      # You should definitely change the passwords in production
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-ChangeMe}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-ChangeMeRoot}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-ChangeMeRoot}"]
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    volumes:
+      - database_data:/var/lib/mysql:rw
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+###< doctrine/doctrine-bundle ###
+
+volumes:
+###> doctrine/doctrine-bundle ###
+  database_data:
+###< doctrine/doctrine-bundle ###
