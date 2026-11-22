@@ -20,14 +20,17 @@
         "symfony/form": "8.1.*",
         "symfony/framework-bundle": "8.1.*",
         "symfony/monolog-bundle": "^4.1",
+        "symfony/rate-limiter": "8.1.*",
         "symfony/runtime": "8.1.*",
         "symfony/security-bundle": "8.1.*",
+        "symfony/serializer": "8.1.*",
         "symfony/string": "8.1.*",
         "symfony/translation": "8.1.*",
         "symfony/twig-bundle": "8.1.*",
         "symfony/validator": "8.1.*",
         "symfony/yaml": "8.1.*",
-        "twig/extra-bundle": "^3.29"
+        "twig/extra-bundle": "^3.29",
+        "twig/string-extra": "^3.24"
     },
     "config": {
         "allow-plugins": {
@@ -76,6 +79,15 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "cs": "php-cs-fixer fix --dry-run --diff",
+        "cs:fix": "php-cs-fixer fix",
+        "phpstan": "phpstan analyse --memory-limit=1G",
+        "test": "phpunit",
+        "qa": [
+            "@cs",
+            "@phpstan",
+            "@test"
         ]
     },
     "conflict": {
@@ -83,11 +95,12 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": "true",
             "require": "8.1.*"
         }
     },
     "require-dev": {
+        "dama/doctrine-test-bundle": "^8.8",
         "doctrine/doctrine-fixtures-bundle": "*",
         "friendsofphp/php-cs-fixer": "*",
         "phpstan/extension-installer": "*",
@@ -100,5 +113,12 @@
         "symfony/debug-bundle": "8.1.*",
         "symfony/maker-bundle": "*",
         "symfony/web-profiler-bundle": "8.1.*"
+    },
+    "scripts-descriptions": {
+        "cs": "Check coding standards (PSR-12 + @Symfony)",
+        "cs:fix": "Fix coding standards",
+        "phpstan": "Static analysis (level 8)",
+        "test": "Run the PHPUnit suite (needs the MySQL service)",
+        "qa": "Run all quality checks"
     }
 }

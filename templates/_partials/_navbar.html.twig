@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg ms-navbar sticky-top">
+    <div class="container">
+        <a class="navbar-brand ms-brand d-flex align-items-center gap-2" href="{{ path('app_home') }}">
+            <span class="ms-brand-icon"><i class="fa-solid fa-spa" aria-hidden="true"></i></span>
+            <span class="text-body">mon<span>Studio</span></span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Afficher le menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            {% set route = app.current_route ?? '' %}
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link{{ route starts with 'app_studio' or route starts with 'app_session' ? ' active' }}" href="{{ path('app_studio_index') }}">
+                        <i class="fa-solid fa-magnifying-glass me-1" aria-hidden="true"></i>Trouver un cours
+                    </a>
+                </li>
+                {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item">
+                        <a class="nav-link{{ route starts with 'app_account' ? ' active' }}" href="{{ path('app_account_bookings') }}">
+                            <i class="fa-regular fa-calendar-check me-1" aria-hidden="true"></i>Mes réservations
+                        </a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_OWNER') %}
+                    <li class="nav-item">
+                        <a class="nav-link{{ route starts with 'app_manage' ? ' active' }}" href="{{ path('app_manage_dashboard') }}">
+                            <i class="fa-solid fa-store me-1" aria-hidden="true"></i>Gérer mes studios
+                        </a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link{{ route starts with 'app_admin' ? ' active' }}" href="{{ path('app_admin_discipline_index') }}">
+                            <i class="fa-solid fa-sliders me-1" aria-hidden="true"></i>Administration
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+            <div class="d-flex flex-column flex-lg-row gap-2">
+                {% if app.user %}
+                    <div class="dropdown">
+                        <button class="btn btn-light border dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-regular fa-circle-user me-1" aria-hidden="true"></i>{{ app.user.firstName }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ path('app_account_bookings') }}">Mes réservations</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ logout_path('main') }}"><i class="fa-solid fa-arrow-right-from-bracket me-1" aria-hidden="true"></i>Se déconnecter</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a class="btn btn-link text-decoration-none" href="{{ path('app_login') }}">Se connecter</a>
+                    <a class="btn btn-primary" href="{{ path('app_register') }}">Créer un compte</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

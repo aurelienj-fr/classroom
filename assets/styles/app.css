@@ -1,3 +1,217 @@
-body {
-    background-color: skyblue;
+/*
+ * monStudio theme: a thin layer over Bootstrap 5.3 (CSS variables + a few components).
+ */
+:root {
+    --ms-ink: #1d2433;
+    --ms-primary: #0f766e;
+    --ms-primary-rgb: 15, 118, 110;
+    --ms-primary-dark: #0b5a54;
+    --ms-accent: #f2765b;
+    --ms-accent-rgb: 242, 118, 91;
+    --ms-sand: #f7f4ef;
+    --ms-line: #e6e1d8;
+    --ms-radius: 1rem;
+
+    --bs-body-color: var(--ms-ink);
+    --bs-body-bg: var(--ms-sand);
+    --bs-primary: var(--ms-primary);
+    --bs-primary-rgb: var(--ms-primary-rgb);
+    --bs-link-color: var(--ms-primary);
+    --bs-link-color-rgb: var(--ms-primary-rgb);
+    --bs-link-hover-color: var(--ms-primary-dark);
+    --bs-border-color: var(--ms-line);
+    --bs-border-radius: .6rem;
+    --bs-border-radius-lg: var(--ms-radius);
+    --bs-font-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+h1, h2, h3, .display-5 {
+    letter-spacing: -.02em;
+    font-weight: 700;
+}
+
+/* Buttons */
+.btn-primary {
+    --bs-btn-bg: var(--ms-primary);
+    --bs-btn-border-color: var(--ms-primary);
+    --bs-btn-hover-bg: var(--ms-primary-dark);
+    --bs-btn-hover-border-color: var(--ms-primary-dark);
+    --bs-btn-active-bg: var(--ms-primary-dark);
+    --bs-btn-active-border-color: var(--ms-primary-dark);
+    --bs-btn-disabled-bg: var(--ms-primary);
+    --bs-btn-disabled-border-color: var(--ms-primary);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--ms-primary);
+    --bs-btn-border-color: var(--ms-primary);
+    --bs-btn-hover-bg: var(--ms-primary);
+    --bs-btn-hover-border-color: var(--ms-primary);
+    --bs-btn-active-bg: var(--ms-primary-dark);
+}
+
+.btn-accent {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--ms-accent);
+    --bs-btn-border-color: var(--ms-accent);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #e05e43;
+    --bs-btn-hover-border-color: #e05e43;
+    --bs-btn-active-bg: #c9503a;
+}
+
+.text-accent { color: var(--ms-accent) !important; }
+.bg-primary-subtle { background-color: rgba(var(--ms-primary-rgb), .1) !important; }
+.text-primary { color: var(--ms-primary) !important; }
+
+.form-control:focus, .form-select:focus, .form-check-input:focus {
+    border-color: rgba(var(--ms-primary-rgb), .6);
+    box-shadow: 0 0 0 .2rem rgba(var(--ms-primary-rgb), .2);
+}
+
+.form-check-input:checked {
+    background-color: var(--ms-primary);
+    border-color: var(--ms-primary);
+}
+
+/* Navbar */
+.ms-navbar {
+    background: #fff;
+    border-bottom: 1px solid var(--ms-line);
+}
+
+.ms-brand {
+    font-weight: 800;
+    letter-spacing: -.03em;
+    color: var(--ms-ink);
+}
+
+.ms-brand span { color: var(--ms-primary); }
+
+.ms-brand .ms-brand-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: .6rem;
+    background: var(--ms-primary);
+    color: #fff;
+    font-size: .95rem;
+}
+
+/* Hero */
+.ms-hero {
+    background:
+        radial-gradient(circle at 85% 20%, rgba(var(--ms-accent-rgb), .25), transparent 40%),
+        linear-gradient(135deg, var(--ms-primary) 0%, #134e4a 100%);
+    color: #fff;
+    border-radius: 0 0 2rem 2rem;
+}
+
+.ms-hero .lead { color: rgba(255, 255, 255, .85); }
+
+.ms-search {
+    background: #fff;
+    border-radius: var(--ms-radius);
+    box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, .15);
+}
+
+/* Cards */
+.ms-card {
+    background: #fff;
+    border: 1px solid var(--ms-line);
+    border-radius: var(--ms-radius);
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+a.ms-card:hover, .ms-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 .75rem 1.5rem rgba(29, 36, 51, .08);
+}
+
+.ms-discipline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    padding: 1.25rem .75rem;
+    text-align: center;
+    color: var(--ms-ink);
+    text-decoration: none;
+}
+
+.ms-discipline i {
+    font-size: 1.6rem;
+    color: var(--ms-primary);
+}
+
+.ms-icon-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: 0 0 2.5rem;
+    border-radius: .75rem;
+    background: rgba(var(--ms-primary-rgb), .1);
+    color: var(--ms-primary);
+}
+
+/* Planning */
+.ms-day-title {
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #6b7280;
+}
+
+.ms-session {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .9rem 1rem;
+}
+
+.ms-session + .ms-session { border-top: 1px solid var(--ms-line); }
+
+.ms-session-time {
+    min-width: 4.5rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.ms-session.is-past, .ms-session.is-cancelled { opacity: .55; }
+
+.ms-spots { font-size: .85rem; white-space: nowrap; }
+
+/* Back-office */
+.ms-sidebar-title {
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #6b7280;
+}
+
+.table > :not(caption) > * > * { background-color: transparent; }
+
+.ms-footer {
+    border-top: 1px solid var(--ms-line);
+    background: #fff;
+}
+.min-w-0 { min-width: 0; }
+
+.ms-session-time.is-wide { flex: 0 0 6.5rem; }
+.ms-session-time.is-date { flex: 0 0 9.5rem; }

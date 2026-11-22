@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes réservations{% endblock %}
+
+{% block body %}
+    <h1 class="h2 mb-4">Mes réservations</h1>
+
+    <h2 class="h5 mb-3">À venir</h2>
+    {% if upcoming is empty %}
+        <div class="ms-card p-4 mb-5 text-center">
+            <p class="text-body-secondary">Vous n'avez aucune réservation à venir.</p>
+            <a href="{{ path('app_studio_index') }}" class="btn btn-primary">Trouver un cours</a>
+        </div>
+    {% else %}
+        <div class="ms-card overflow-hidden mb-5">
+            {% for booking in upcoming %}
+                {% set session = booking.session %}
+                <div class="ms-session flex-wrap{{ booking.confirmed ? '' : ' is-cancelled' }}">
+                    <div class="ms-session-time is-wide">
+                        <div class="small text-body-secondary fw-normal">{{ session.startsAt|fr_date('day_short') }}</div>
+                        {{ session.startsAt|fr_date('time') }}
+                    </div>
+                    <div class="flex-grow-1 min-w-0">
+                        <a href="{{ path('app_session_show', {id: session.id}) }}" class="fw-semibold">{{ session.activity.name }}</a>
+                        <div class="small text-body-secondary">{{ session.studio.name }} — {{ session.studio.city }}</div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        {% if session.cancelled %}
+                            <span class="badge text-bg-secondary">Séance annulée</span>
+                        {% elseif not booking.confirmed %}
+                            <span class="badge text-bg-light border">Réservation annulée</span>
+                        {% else %}
+                            <span class="badge text-bg-success">Confirmée</span>
+                            {% if cancellable[booking.id] ?? false %}
+                                <form method="post" action="{{ path('app_account_booking_cancel', {id: booking.id}) }}" data-confirm="Annuler cette réservation ?">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('cancel-booking-' ~ booking.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Annuler</button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h2 class="h5 mb-3">Historique</h2>
+    {% if past is empty %}
+        <p class="text-body-secondary">Aucun cours passé pour le moment.</p>
+    {% else %}
+        <div class="ms-card overflow-hidden">
+            {% for booking in past %}
+                {% set session = booking.session %}
+                <div class="ms-session is-past">
+                    <div class="ms-session-time is-date small">{{ session.startsAt|fr_date('date') }}</div>
+                    <div class="flex-grow-1 min-w-0">
+                        <span class="fw-semibold">{{ session.activity.name }}</span>
+                        <div class="small text-body-secondary">{{ session.studio.name }}</div>
+                    </div>
+                    {% if booking.checkedInAt %}
+                        <span class="badge text-bg-success">Présent(e)</span>
+                    {% elseif not booking.confirmed %}
+                        <span class="badge text-bg-light border">Annulée</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

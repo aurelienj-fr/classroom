@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% set studio = session.studio %}
+
+{% block title %}{{ session.activity.name }} — {{ session.startsAt|fr_date('day') }}{% endblock %}
+
+{% block body %}
+    <nav aria-label="Fil d'Ariane" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{{ path('app_manage_dashboard') }}">Mes studios</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_manage_studio_show', {id: studio.id}) }}">{{ studio.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Séance</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-4">
+        <div>
+            <h1 class="h2 mb-1">{{ session.activity.name }}</h1>
+            <p class="text-body-secondary mb-0">
+                {{ session.startsAt|fr_date('full')|capitalize }} – {{ session.endsAt|fr_date('time') }}
+                {% if session.instructorName %}· {{ session.instructorName }}{% endif %}
+            </p>
+            {% if session.cancelled %}<span class="badge text-bg-secondary mt-2">Séance annulée</span>{% endif %}
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_manage_session_edit', {id: session.id}) }}" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1" aria-hidden="true"></i>Modifier</a>
+            <form method="post" action="{{ path('app_manage_session_toggle_cancel', {id: session.id}) }}" data-confirm="{{ session.cancelled ? 'Rétablir cette séance ?' : 'Annuler cette séance ? Les inscrits la verront comme annulée.' }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('toggle-session-' ~ session.id) }}">
+                {% if session.cancelled %}
+                    <button type="submit" class="btn btn-outline-success"><i class="fa-solid fa-rotate-left me-1" aria-hidden="true"></i>Rétablir</button>
+                {% else %}
+                    <button type="submit" class="btn btn-outline-danger"><i class="fa-solid fa-ban me-1" aria-hidden="true"></i>Annuler la séance</button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <div class="ms-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 mb-0">Inscrits</h2>
+            <span class="badge bg-primary-subtle text-primary">{{ attendees|length }} / {{ session.capacity }}</span>
+        </div>
+        {% if attendees is empty %}
+            <p class="text-body-secondary mb-0">Aucun inscrit pour le moment.</p>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr class="small text-body-secondary">
+                            <th scope="col">Membre</th>
+                            <th scope="col">E-mail</th>
+                            <th scope="col">Réservé le</th>
+                            <th scope="col" class="text-end">Présence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in attendees %}
+                            <tr>
+                                <td class="fw-semibold">{{ booking.member.fullName }}</td>
+                                <td><a href="mailto:{{ booking.member.email }}">{{ booking.member.email }}</a></td>
+                                <td class="small text-nowrap">{{ booking.createdAt|fr_date('day_short') }} {{ booking.createdAt|fr_date('time') }}</td>
+                                <td class="text-end">
+                                    <form method="post" action="{{ path('app_manage_booking_check_in', {id: booking.id}) }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('check-in-' ~ booking.id) }}">
+                                        {% if booking.checkedInAt %}
+                                            <button type="submit" class="btn btn-sm btn-success"><i class="fa-solid fa-check me-1" aria-hidden="true"></i>Présent(e)</button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-sm btn-light border">Pointer</button>
+                                        {% endif %}
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as ui %}
+
+{% block container_class %}container pb-4{% endblock %}
+
+{% block hero %}
+    <section class="ms-hero pt-5 pb-5 mb-5">
+        <div class="container py-lg-4">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <span class="badge rounded-pill text-bg-light text-primary mb-3"><i class="fa-solid fa-star me-1" aria-hidden="true"></i>Yoga · Pilates · Fitness · Danse</span>
+                    <h1 class="display-5 mb-3">Votre prochain cours,<br>à deux pas de chez vous.</h1>
+                    <p class="lead mb-4">Comparez les studios de votre ville, consultez leur planning et réservez votre place en quelques secondes.</p>
+                </div>
+            </div>
+            <form action="{{ path('app_studio_index') }}" method="get" class="ms-search p-3 p-lg-4" role="search">
+                <div class="row g-2 g-lg-3 align-items-end">
+                    <div class="col-md-5">
+                        <label for="search-city" class="form-label small fw-semibold text-body-secondary">Ville ou code postal</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-location-dot text-primary" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" id="search-city" name="ville" list="cities" placeholder="Paris, Lyon, 33000…" maxlength="100">
+                        </div>
+                        <datalist id="cities">
+                            {% for city in cities %}<option value="{{ city }}">{% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="search-discipline" class="form-label small fw-semibold text-body-secondary">Discipline</label>
+                        <select class="form-select form-select-lg" id="search-discipline" name="discipline">
+                            <option value="">Toutes les disciplines</option>
+                            {% for discipline in disciplines %}
+                                <option value="{{ discipline.slug }}">{{ discipline.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-grid">
+                        <button type="submit" class="btn btn-accent btn-lg"><i class="fa-solid fa-magnifying-glass me-2" aria-hidden="true"></i>Rechercher</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}
+
+{% block body %}
+    {% if disciplines is not empty %}
+        <section class="mb-5">
+            <h2 class="h4 mb-3">Explorer par discipline</h2>
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-lg-6 g-3">
+                {% for discipline in disciplines %}
+                    <div class="col">
+                        <a href="{{ path('app_studio_index', {discipline: discipline.slug}) }}" class="ms-card ms-discipline h-100">
+                            <i class="fa-solid fa-{{ discipline.icon }}" aria-hidden="true"></i>
+                            <span class="fw-semibold small">{{ discipline.name }}</span>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-end mb-3">
+            <h2 class="h4 mb-0">Prochains cours disponibles</h2>
+            <a href="{{ path('app_studio_index') }}" class="small fw-semibold">Tous les studios <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+        {% if nextSessions is empty %}
+            <div class="ms-card p-4 text-center text-body-secondary">Aucun cours planifié pour le moment. Revenez bientôt !</div>
+        {% else %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                {% for session in nextSessions %}
+                    <div class="col">
+                        <a href="{{ path('app_session_show', {id: session.id}) }}" class="ms-card d-flex gap-3 p-3 h-100 text-decoration-none text-body">
+                            {{ ui.discipline_icon(session.activity.discipline) }}
+                            <div class="min-w-0">
+                                <div class="small text-primary fw-semibold">{{ session.startsAt|fr_date('day')|capitalize }} · {{ session.startsAt|fr_date('time') }}</div>
+                                <div class="fw-bold text-truncate">{{ session.activity.name }}</div>
+                                <div class="small text-body-secondary text-truncate"><i class="fa-solid fa-location-dot me-1" aria-hidden="true"></i>{{ session.studio.name }} — {{ session.studio.city }}</div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="ms-card p-4 p-lg-5 d-lg-flex align-items-center justify-content-between gap-4">
+        <div>
+            <h2 class="h4">Vous gérez un studio ?</h2>
+            <p class="mb-lg-0 text-body-secondary">Publiez votre planning, gérez vos inscrits et le pointage des présences, gratuitement pendant la phase de lancement.</p>
+        </div>
+        <a href="{{ path('app_register') }}" class="btn btn-primary btn-lg flex-shrink-0"><i class="fa-solid fa-store me-2" aria-hidden="true"></i>Publier mon studio</a>
+    </section>
+{% endblock %}

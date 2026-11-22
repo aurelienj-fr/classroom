@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Studios{% if search.ville %} à {{ search.ville }}{% endif %}{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
+        <div>
+            <h1 class="h2 mb-1">Trouver un studio</h1>
+            <p class="text-body-secondary mb-0">{{ studios|length }} studio{{ studios|length > 1 ? 's' }} trouvé{{ studios|length > 1 ? 's' }}</p>
+        </div>
+        <form method="get" class="row g-2 align-items-center" role="search">
+            <div class="col-sm">
+                <label for="ville" class="visually-hidden">Ville ou code postal</label>
+                <input type="text" class="form-control" id="ville" name="ville" value="{{ search.ville }}" list="cities" placeholder="Ville ou code postal" maxlength="100">
+                <datalist id="cities">{% for city in cities %}<option value="{{ city }}">{% endfor %}</datalist>
+            </div>
+            <div class="col-sm">
+                <label for="discipline" class="visually-hidden">Discipline</label>
+                <select class="form-select" id="discipline" name="discipline">
+                    <option value="">Toutes les disciplines</option>
+                    {% for discipline in disciplines %}
+                        <option value="{{ discipline.slug }}"{{ search.discipline == discipline.slug ? ' selected' }}>{{ discipline.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-auto d-grid">
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass me-1" aria-hidden="true"></i>Filtrer</button>
+            </div>
+        </form>
+    </div>
+
+    {% if studios is empty %}
+        <div class="ms-card p-5 text-center">
+            <i class="fa-regular fa-face-meh fa-2x text-body-tertiary mb-3" aria-hidden="true"></i>
+            <p class="mb-3">Aucun studio ne correspond à votre recherche.</p>
+            <a href="{{ path('app_studio_index') }}" class="btn btn-outline-primary">Voir tous les studios</a>
+        </div>
+    {% else %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+            {% for studio in studios %}
+                <div class="col">
+                    <a href="{{ path('app_studio_show', {slug: studio.slug}) }}" class="ms-card d-flex flex-column h-100 p-4 text-decoration-none text-body">
+                        <div class="d-flex align-items-start gap-3 mb-3">
+                            <span class="ms-icon-badge"><i class="fa-solid fa-{{ studio.disciplines.first ? studio.disciplines.first.icon : 'spa' }}" aria-hidden="true"></i></span>
+                            <div class="min-w-0">
+                                <h2 class="h5 mb-1">{{ studio.name }}</h2>
+                                <div class="small text-body-secondary"><i class="fa-solid fa-location-dot me-1" aria-hidden="true"></i>{{ studio.postalCode }} {{ studio.city }}</div>
+                            </div>
+                        </div>
+                        {% if studio.description %}
+                            <p class="small text-body-secondary mb-3">{{ studio.description|u.truncate(140, '…', false) }}</p>
+                        {% endif %}
+                        <div class="mt-auto d-flex flex-wrap gap-1">
+                            {% for discipline in studio.disciplines %}
+                                <span class="badge rounded-pill bg-primary-subtle text-primary fw-medium">{{ discipline.name }}</span>
+                            {% endfor %}
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

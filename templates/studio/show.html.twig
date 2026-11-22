@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as ui %}
+
+{% block title %}{{ studio.name }} — {{ studio.city }}{% endblock %}
+{% block meta_description %}{{ studio.description ? studio.description|u.truncate(155, '…') : 'Planning et réservation des cours de ' ~ studio.name ~ ' à ' ~ studio.city ~ '.' }}{% endblock %}
+
+{% block body %}
+    <nav aria-label="Fil d'Ariane" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{{ path('app_studio_index') }}">Studios</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_studio_index', {ville: studio.city}) }}">{{ studio.city }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ studio.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <div class="col-lg-4 order-lg-2">
+            <aside class="ms-card p-4">
+                <h1 class="h3 mb-2">{{ studio.name }}</h1>
+                <div class="d-flex flex-wrap gap-1 mb-3">
+                    {% for discipline in studio.disciplines %}
+                        <a href="{{ path('app_studio_index', {discipline: discipline.slug}) }}" class="badge rounded-pill bg-primary-subtle text-primary fw-medium text-decoration-none">
+                            <i class="fa-solid fa-{{ discipline.icon }} me-1" aria-hidden="true"></i>{{ discipline.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+                {% if studio.description %}
+                    <p class="text-body-secondary">{{ studio.description|nl2br }}</p>
+                {% endif %}
+                <ul class="list-unstyled small mb-0 d-grid gap-2">
+                    <li><i class="fa-solid fa-location-dot text-primary me-2" aria-hidden="true"></i>{{ studio.fullAddress }}</li>
+                    {% if studio.phone %}<li><i class="fa-solid fa-phone text-primary me-2" aria-hidden="true"></i><a href="tel:{{ studio.phone|replace({' ': ''}) }}">{{ studio.phone }}</a></li>{% endif %}
+                    {% if studio.email %}<li><i class="fa-regular fa-envelope text-primary me-2" aria-hidden="true"></i><a href="mailto:{{ studio.email }}">{{ studio.email }}</a></li>{% endif %}
+                    <li><i class="fa-regular fa-clock text-primary me-2" aria-hidden="true"></i>Annulation gratuite jusqu'à {{ studio.cancellationDeadlineHours }} h avant le cours</li>
+                </ul>
+            </aside>
+        </div>
+
+        <div class="col-lg-8 order-lg-1">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h4 mb-0">Planning</h2>
+                <div class="btn-group" role="group" aria-label="Changer de semaine">
+                    <a class="btn btn-outline-primary btn-sm{{ planning.offset <= 0 ? ' disabled' }}" href="{{ path('app_studio_show', {slug: studio.slug, semaine: planning.offset - 1}) }}" aria-label="Semaine précédente"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a>
+                    <span class="btn btn-sm border-primary text-body bg-white pe-none">Du {{ planning.start|fr_date('day_short') }} au {{ planning.end|fr_date('day_short') }}</span>
+                    <a class="btn btn-outline-primary btn-sm{{ planning.offset >= maxWeekOffset ? ' disabled' }}" href="{{ path('app_studio_show', {slug: studio.slug, semaine: planning.offset + 1}) }}" aria-label="Semaine suivante"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </div>
+
+            {% if planning.empty %}
+                <div class="ms-card p-5 text-center text-body-secondary">
+                    <i class="fa-regular fa-calendar fa-2x mb-3" aria-hidden="true"></i>
+                    <p class="mb-0">Aucun cours planifié sur cette période.</p>
+                </div>
+            {% else %}
+                {% for date, sessions in planning.days %}
+                    {% if sessions is not empty %}
+                        <section class="mb-3">
+                            <h3 class="ms-day-title mb-2">{{ (sessions|first).startsAt|fr_date('day') }}</h3>
+                            <div class="ms-card overflow-hidden">
+                                {% for session in sessions %}
+                                    {% set booked = bookedCounts[session.id] ?? 0 %}
+                                    <a href="{{ path('app_session_show', {id: session.id}) }}" class="ms-session text-decoration-none text-body ms-card-hover{{ session.cancelled ? ' is-cancelled' }}{{ session.startsAt <= now ? ' is-past' }}">
+                                        <div class="ms-session-time">{{ session.startsAt|fr_date('time') }}</div>
+                                        {{ ui.discipline_icon(session.activity.discipline) }}
+                                        <div class="flex-grow-1 min-w-0">
+                                            <div class="fw-semibold text-truncate">{{ session.activity.name }}</div>
+                                            <div class="small text-body-secondary text-truncate">
+                                                {{ session.activity.durationMinutes }} min
+                                                {% if session.instructorName %}· {{ session.instructorName }}{% endif %}
+                                                · {{ session.activity.level.label }}
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            {% if session.id in myBookedSessionIds %}
+                                                <span class="badge text-bg-success"><i class="fa-solid fa-check me-1" aria-hidden="true"></i>Réservé</span>
+                                            {% else %}
+                                                {{ ui.spots(session, booked, now) }}
+                                            {% endif %}
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

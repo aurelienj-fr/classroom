@@ -1,24 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Réservez vos cours de sport et de bien-être{% endblock %} · monStudio</title>
+        <meta name="description" content="{% block meta_description %}Trouvez un studio près de chez vous et réservez vos cours de yoga, pilates, fitness ou danse en quelques clics.{% endblock %}">
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><rect width=%22128%22 height=%22128%22 rx=%2228%22 fill=%22%230f766e%22/><text x=%2264%22 y=%2290%22 font-size=%2272%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22 font-weight=%22bold%22>m</text></svg>">
+        <link rel="stylesheet" href="{{ asset('lib/bootstrap/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('lib/fontawesome/css/all.min.css') }}">
+        {% block stylesheets %}{% endblock %}
+        <script src="{{ asset('lib/bootstrap/bootstrap.bundle.min.js') }}" defer></script>
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
-
-        {% set frankenphp_hot_reload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
-        {% if frankenphp_hot_reload %}
-        <meta name="frankenphp-hot-reload:url" content="{{ frankenphp_hot_reload }}">
-        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
-        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
-        {% endif %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% include '_partials/_navbar.html.twig' %}
+
+        <main>
+            {% block hero %}{% endblock %}
+            <div class="{% block container_class %}container py-4 py-lg-5{% endblock %}">
+                {% include '_partials/_flashes.html.twig' %}
+                {% block body %}{% endblock %}
+            </div>
+        </main>
+
+        <footer class="ms-footer py-4 mt-5">
+            <div class="container d-flex flex-column flex-md-row justify-content-between gap-2 small text-body-secondary">
+                <span><strong class="text-body">monStudio</strong> — réservez vos cours en quelques clics.</span>
+                <span>
+                    <a href="{{ path('app_studio_index') }}" class="link-secondary">Studios</a>
+                    <span class="mx-2">·</span>
+                    <a href="{{ path('app_register') }}" class="link-secondary">Publier mon studio</a>
+                </span>
+            </div>
+        </footer>
     </body>
 </html>

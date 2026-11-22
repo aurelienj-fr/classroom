@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ studio.name }} — gestion{% endblock %}
+
+{% block body %}
+    <nav aria-label="Fil d'Ariane" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{{ path('app_manage_dashboard') }}">Mes studios</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ studio.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
+        <div>
+            <h1 class="h2 mb-1">{{ studio.name }}</h1>
+            {% if studio.published %}
+                <span class="badge text-bg-success">Publié</span>
+                <a href="{{ path('app_studio_show', {slug: studio.slug}) }}" class="small ms-2">Voir la page publique</a>
+            {% else %}
+                <span class="badge text-bg-secondary">Brouillon — non visible du public</span>
+            {% endif %}
+        </div>
+        <a href="{{ path('app_manage_studio_edit', {id: studio.id}) }}" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1" aria-hidden="true"></i>Modifier le studio</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="ms-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h5 mb-0">Cours</h2>
+                    <a href="{{ path('app_manage_activity_new', {id: studio.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-plus" aria-hidden="true"></i><span class="visually-hidden">Nouveau cours</span></a>
+                </div>
+                {% if studio.activities is empty %}
+                    <p class="small text-body-secondary mb-0">Aucun cours. Créez un cours (ex. : « Hatha yoga – 60 min ») puis planifiez ses séances.</p>
+                {% else %}
+                    <ul class="list-unstyled mb-0 d-grid gap-2">
+                        {% for activity in studio.activities %}
+                            <li class="d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-{{ activity.discipline.icon }} text-primary" aria-hidden="true"></i>
+                                <a href="{{ path('app_manage_activity_edit', {id: activity.id}) }}" class="flex-grow-1 text-truncate">{{ activity.name }}</a>
+                                <a href="{{ path('app_manage_session_new', {id: activity.id}) }}" class="btn btn-sm btn-outline-primary" title="Planifier une séance"><i class="fa-solid fa-calendar-plus" aria-hidden="true"></i><span class="visually-hidden">Planifier</span></a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="ms-card p-4">
+                <h2 class="h5 mb-3">Prochaines séances</h2>
+                {% if sessions is empty %}
+                    <p class="small text-body-secondary mb-0">Aucune séance planifiée.</p>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr class="small text-body-secondary">
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Cours</th>
+                                    <th scope="col">Professeur</th>
+                                    <th scope="col" class="text-end">Inscrits</th>
+                                    <th scope="col"><span class="visually-hidden">Actions</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for session in sessions %}
+                                    <tr class="{{ session.cancelled ? 'text-decoration-line-through text-body-tertiary' }}">
+                                        <td class="text-nowrap">{{ session.startsAt|fr_date('day_short') }} · {{ session.startsAt|fr_date('time') }}</td>
+                                        <td>{{ session.activity.name }}</td>
+                                        <td>{{ session.instructorName ?? '—' }}</td>
+                                        <td class="text-end text-nowrap">{{ bookedCounts[session.id] ?? 0 }} / {{ session.capacity }}</td>
+                                        <td class="text-end"><a href="{{ path('app_manage_session_show', {id: session.id}) }}" class="btn btn-sm btn-light border">Détails</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

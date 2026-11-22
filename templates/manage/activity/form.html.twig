@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ activity ? 'Modifier ' ~ activity.name : 'Nouveau cours' }}{% endblock %}
+
+{% block body %}
+    <nav aria-label="Fil d'Ariane" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{{ path('app_manage_dashboard') }}">Mes studios</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_manage_studio_show', {id: studio.id}) }}">{{ studio.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ activity ? activity.name : 'Nouveau cours' }}</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="ms-card p-4 p-lg-5">
+                <h1 class="h3 mb-4">{{ activity ? 'Modifier le cours' : 'Nouveau cours' }}</h1>
+                {{ form_start(form) }}
+                    {{ form_row(form.name) }}
+                    <div class="row g-3">
+                        <div class="col-sm-6">{{ form_row(form.discipline) }}</div>
+                        <div class="col-sm-6">{{ form_row(form.level) }}</div>
+                        <div class="col-sm-6">{{ form_row(form.durationMinutes) }}</div>
+                        <div class="col-sm-6">{{ form_row(form.defaultCapacity) }}</div>
+                    </div>
+                    {{ form_row(form.description) }}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        <a href="{{ path('app_manage_studio_show', {id: studio.id}) }}" class="btn btn-link">Annuler</a>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

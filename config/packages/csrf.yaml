@@ -1,11 +1,4 @@
-# Enable stateless CSRF protection for forms and logins/logouts
+# Classic session-based CSRF tokens: they work without JavaScript and in functional tests.
+# The recipe's stateless tokens rely on the Origin header or a JS double-submit cookie.
 framework:
-    form:
-        csrf_protection:
-            token_id: submit
-
-    csrf_protection:
-        stateless_token_ids:
-            - submit
-            - authenticate
-            - logout
+    csrf_protection: true

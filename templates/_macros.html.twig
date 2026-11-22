@@ -1,0 +1,23 @@
+{# Remaining seats badge for a session. #}
+{% macro spots(session, booked, now) %}
+    {% set left = session.capacity - booked %}
+    {% if session.cancelled %}
+        <span class="badge text-bg-secondary">Annulée</span>
+    {% elseif session.startsAt <= now %}
+        <span class="badge text-bg-light border">Terminée</span>
+    {% elseif left <= 0 %}
+        <span class="badge text-bg-danger">Complet</span>
+    {% elseif left <= 3 %}
+        <span class="badge bg-warning-subtle text-warning-emphasis ms-spots"><i class="fa-solid fa-fire me-1" aria-hidden="true"></i>{{ left }} place{{ left > 1 ? 's' }}</span>
+    {% else %}
+        <span class="badge bg-primary-subtle text-primary ms-spots">{{ left }} places</span>
+    {% endif %}
+{% endmacro %}
+
+{% macro level(level) %}
+    <span class="badge rounded-pill text-bg-light border fw-normal">{{ level.label }}</span>
+{% endmacro %}
+
+{% macro discipline_icon(discipline) %}
+    <span class="ms-icon-badge"><i class="fa-solid fa-{{ discipline.icon }}" aria-hidden="true"></i></span>
+{% endmacro %}

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ discipline.id ? 'Modifier ' ~ discipline.name : 'Nouvelle discipline' }}{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="ms-card p-4 p-lg-5">
+                <h1 class="h3 mb-4">{{ discipline.id ? 'Modifier la discipline' : 'Nouvelle discipline' }}</h1>
+                {{ form_start(form) }}
+                    {{ form_rest(form) }}
+                    <p class="small text-body-secondary">Catalogue : <a href="https://fontawesome.com/search?ic=free" target="_blank" rel="noopener noreferrer">icônes Font Awesome gratuites</a>.</p>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        <a href="{{ path('app_admin_discipline_index') }}" class="btn btn-link">Annuler</a>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,9 +1,13 @@
 /*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
+ * monStudio front entry point (AssetMapper).
+ * Bootstrap's JS bundle is loaded separately in base.html.twig.
  */
 import './styles/app.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+// Confirmation prompt for destructive actions: <form data-confirm="Message">.
+document.addEventListener('submit', (event) => {
+    const form = event.target;
+    if (form instanceof HTMLFormElement && form.dataset.confirm && !window.confirm(form.dataset.confirm)) {
+        event.preventDefault();
+    }
+});
