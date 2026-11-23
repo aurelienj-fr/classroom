@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+#
+# Writes the SQL of the Doctrine migrations to a file, for hosts without SSH (import it with
+# phpMyAdmin). The file also records the migrations in doctrine_migration_versions, so that a
+# later "doctrine:migrations:migrate" (e.g. once SSH is available) stays consistent.
+#
+# The SQL is produced by running the migrations on a TEMPORARY local database, dropped afterwards.
+#
+# Usage:
+#   EXPORT_DATABASE_URL="mysql://root:ChangeMeRoot@database:3306/monstudio_export?serverVersion=8.0.32&charset=utf8mb4" \
+#     bin/export-migrations-sql [--from=<last version applied in production>] [--output=build/migrations.sql]
+#
+#   --from   omitted: every migration (first deployment, empty database)
+#            e.g. --from='DoctrineMigrations\Version20261123143928': only the newer migrations
+#
+# Environment: EXPORT_DATABASE_URL (required, its database is DROPPED), PHP_BIN (default "php").
+
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+FROM=""
+OUTPUT="build/migrations.sql"
+for arg in "$@"; do
+    case "$arg" in
+        --from=*) FROM="${arg#--from=}" ;;
+        --output=*) OUTPUT="${arg#--output=}" ;;
+        *) echo "Unknown option: $arg" >&2; exit 1 ;;
+    esac
+done
+
+: "${EXPORT_DATABASE_URL:?Set EXPORT_DATABASE_URL to a scratch database URL (it will be dropped)}"
+PHP_BIN="${PHP_BIN:-php}"
+
+console() {
+    DATABASE_URL="$EXPORT_DATABASE_URL" APP_ENV=dev $PHP_BIN bin/console "$@" --no-interaction
+}
+
+mkdir -p "$(dirname "$OUTPUT")"
+TMP="$(mktemp)"
+trap 'rm -f "$TMP"' EXIT
+
+console doctrine:database:drop --force --if-exists --quiet
+console doctrine:database:create --quiet
+if [ -n "$FROM" ]; then
+    console doctrine:migrations:migrate "$FROM" --quiet
+fi
+console doctrine:migrations:migrate --write-sql="$TMP" --quiet
+console doctrine:database:drop --force --quiet
+
+{
+    echo "-- monStudio database migrations, generated on $(date '+%Y-%m-%d %H:%M:%S')"
+    echo "-- From: ${FROM:-empty database}. Import with phpMyAdmin (or the mysql client)."
+    echo "SET NAMES utf8mb4;"
+    echo
+    if [ -z "$FROM" ]; then
+        echo "CREATE TABLE IF NOT EXISTS doctrine_migration_versions (version VARCHAR(191) NOT NULL, executed_at DATETIME DEFAULT NULL, execution_time INT DEFAULT NULL, PRIMARY KEY (version)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+        echo
+    fi
+    grep -v '^-- Doctrine Migration File Generated' "$TMP"
+    echo
+    echo "-- Record the migrations as executed"
+    grep '^-- Version ' "$TMP" | sed -E 's/^-- Version (.*)$/\1/' | while read -r version; do
+        escaped="${version//\\/\\\\}"
+        echo "INSERT INTO doctrine_migration_versions (version, executed_at, execution_time) VALUES ('${escaped}', NOW(), 0);"
+    done
+} > "$OUTPUT"
+
+count="$(grep -c '^-- Version ' "$TMP" || true)"
+echo "Wrote $OUTPUT ($count migration(s))."

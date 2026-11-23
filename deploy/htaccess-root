@@ -1,0 +1,13 @@
+# Fallback for hosts where the website root cannot point to the "public/" directory:
+# upload this file as ".htaccess" at the root of the project (next to "public/").
+# Every request is served from "public/"; the rest of the project is never reachable.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    Require all denied
+</IfModule>

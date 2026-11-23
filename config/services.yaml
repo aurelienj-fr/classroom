@@ -21,3 +21,6 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # "bin/console dotenv:dump prod" compiles the .env files into .env.local.php (used by bin/build-release).
+    Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~

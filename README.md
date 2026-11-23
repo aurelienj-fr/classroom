@@ -127,6 +127,9 @@ Centralisées dans `App\Booking\BookingManager` :
 
 ## Mise en production
 
+**Hébergement mutualisé (OVHcloud, IONOS…)** : suivre [DEPLOY.md](DEPLOY.md) (version préparée par `bin/build-release`, envoi FTP, SQL pour phpMyAdmin, e-mails envoyés après la réponse + tâche planifiée horaire, `app:admin:create` pour le premier administrateur).
+
+
 L'image Docker fournie est une image de **développement**. En production :
 
 - `APP_ENV=prod` et `APP_DEBUG=0` (sinon profiler et traces d'erreur exposés) ;

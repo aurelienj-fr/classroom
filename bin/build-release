@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+#
+# Builds a release of monStudio ready to upload to a shared PHP host (OVHcloud, IONOS…) by FTP/SFTP:
+# production dependencies, compiled assets and compiled configuration (.env.local.php).
+#
+# Prerequisites: ".env.prod.local" at the project root (copy deploy/env.prod.local.dist),
+# PHP 8.4 and Composer (or set PHP_BIN / COMPOSER_BIN, e.g. to run them through Docker).
+#
+# Usage: bin/build-release [--root-htaccess] [--ovh]
+#   --root-htaccess  add deploy/htaccess-root as ".htaccess" (host cannot point the site to public/)
+#   --ovh            add deploy/ovh/.ovhconfig (PHP version on OVHcloud)
+#
+# Result: build/release/ (to upload) and build/monstudio-<commit>.zip when "zip" is available.
+
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+PROJECT_DIR="$(pwd)"
+RELEASE_DIR="$PROJECT_DIR/build/release"
+PHP_BIN="${PHP_BIN:-php}"
+COMPOSER_BIN="${COMPOSER_BIN:-composer}"
+
+ROOT_HTACCESS=0
+OVH=0
+for arg in "$@"; do
+    case "$arg" in
+        --root-htaccess) ROOT_HTACCESS=1 ;;
+        --ovh) OVH=1 ;;
+        *) echo "Unknown option: $arg" >&2; exit 1 ;;
+    esac
+done
+
+if [ ! -f .env.prod.local ]; then
+    echo "Missing .env.prod.local: copy deploy/env.prod.local.dist and fill it in." >&2
+    exit 1
+fi
+if ! git diff --quiet HEAD -- 2>/dev/null; then
+    echo "Warning: uncommitted changes are included in the release." >&2
+fi
+
+echo "> Copying project files"
+rm -rf "$RELEASE_DIR"
+mkdir -p "$RELEASE_DIR"
+# Tracked and untracked (non ignored) files: no vendor/, var/, local secrets…
+git ls-files -z --cached --others --exclude-standard \
+    | while IFS= read -r -d '' file; do [ -e "$file" ] && printf '%s\0' "$file"; done \
+    | tar --null -cf - -T - | tar -xf - -C "$RELEASE_DIR"
+cp .env.prod.local "$RELEASE_DIR/.env.prod.local"
+
+cd "$RELEASE_DIR"
+
+echo "> Installing production dependencies"
+$COMPOSER_BIN install --no-dev --optimize-autoloader --no-interaction --no-progress --no-scripts
+
+echo "> Compiling configuration (.env.local.php)"
+APP_ENV=prod APP_DEBUG=0 $PHP_BIN bin/console dotenv:dump prod --no-interaction
+rm .env.prod.local
+
+echo "> Compiling assets"
+APP_ENV=prod APP_DEBUG=0 $PHP_BIN bin/console asset-map:compile --no-interaction
+
+echo "> Removing development files"
+# Packages installed from source (git clone) carry their history: not needed in production.
+find vendor -name .git -type d -prune -exec rm -rf {} +
+rm -rf var tests docker deploy build \
+    compose.yaml compose.override.yaml phpunit.dist.xml phpstan.dist.neon .php-cs-fixer.dist.php \
+    .editorconfig AGENTS.md bin/phpunit bin/build-release bin/export-migrations-sql
+mkdir -p var
+
+if [ "$ROOT_HTACCESS" = 1 ]; then
+    cp "$PROJECT_DIR/deploy/htaccess-root" .htaccess
+fi
+if [ "$OVH" = 1 ]; then
+    cp "$PROJECT_DIR/deploy/ovh/.ovhconfig" .ovhconfig
+fi
+
+cd "$PROJECT_DIR"
+if command -v zip >/dev/null 2>&1; then
+    ARCHIVE="build/monstudio-$(git rev-parse --short HEAD 2>/dev/null || date +%Y%m%d%H%M).zip"
+    rm -f "$ARCHIVE"
+    (cd "$RELEASE_DIR" && zip -qr "$PROJECT_DIR/$ARCHIVE" .)
+    echo "> Archive: $ARCHIVE"
+fi
+
+echo "Release ready in build/release/ (upload its content; keep var/ writable)."

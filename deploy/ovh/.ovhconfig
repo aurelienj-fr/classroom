@@ -1,0 +1,8 @@
+; OVHcloud web hosting: upload to the root of the FTP space (or of the multisite folder).
+; PHP 8.4 is required. Check the available versions and image names in the OVHcloud documentation
+; ("Hébergement web - Environnement, version PHP, .ovhconfig"); the control panel gives the same setting.
+app.engine=php
+app.engine.version=8.4
+http.firewall=none
+environment=production
+container.image=stable64
