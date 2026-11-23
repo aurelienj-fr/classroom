@@ -39,6 +39,12 @@ booking_status:
     cancelled: 'Cancelled'
     cancelled_by_studio: 'Cancelled by the studio'
 
+owner_request:
+    status:
+        pending: 'Pending'
+        approved: 'Approved'
+        rejected: 'Rejected'
+
 search:
     city: 'City or postcode'
     city_placeholder: 'Paris, Lyon, 33000…'
@@ -106,6 +112,13 @@ session:
         register: 'Sign up for free'
 
 account:
+    owner:
+        title: 'Do you run a studio?'
+        text: 'Request an owner account to publish your studio and classes. Our team reviews every request.'
+        pending: 'Your owner account request is being reviewed by our team.'
+        approved: 'Your request has been approved: log in again to manage your studios.'
+        rejected: 'Your owner account request was not approved. You can contact us or request again.'
+        request: 'Request an owner account'
     upcoming: 'Upcoming'
     no_upcoming: "You don't have any upcoming bookings."
     session_cancelled: 'Class cancelled'
@@ -140,6 +153,7 @@ form:
         password_help: 'At least 12 characters.'
         password_confirm: 'Confirm password'
         studio_owner: 'I run a studio and want to publish my classes'
+        studio_owner_help: 'Your owner account will be activated once our team has approved it.'
         agree_terms: 'I accept the terms of use'
     studio:
         name: 'Studio name'
@@ -175,6 +189,11 @@ form:
         icon_help: 'Icon name without the "fa-" prefix (e.g. dumbbell, person-swimming).'
 
 flash:
+    owner_request:
+        sent: 'Your studio owner request has been sent. An administrator will review it.'
+        approved: "%name%'s owner account is approved."
+        rejected: "%name%'s request has been rejected."
+        not_pending: 'This request has already been reviewed.'
     registration:
         welcome: 'Welcome to monStudio, %name%!'
     booking:
@@ -252,6 +271,15 @@ manage:
         attendance: 'Attendance'
 
 admin:
+    owner_request:
+        title: 'Owner requests'
+        intro: 'Owners can only manage studios once their request is approved.'
+        col_requested_at: 'Requested on'
+        col_status: 'Status'
+        approve: 'Approve'
+        reject: 'Reject'
+        reject_confirm: "Reject %name%'s request?"
+        empty: 'No requests.'
     discipline:
         title: 'Disciplines'
         new: 'New discipline'

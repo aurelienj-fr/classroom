@@ -47,6 +47,7 @@ final class RegistrationFormType extends AbstractType
             ])
             ->add('studioOwner', CheckboxType::class, [
                 'label' => 'form.user.studio_owner',
+                'help' => 'form.user.studio_owner_help',
                 'mapped' => false,
                 'required' => false,
             ])

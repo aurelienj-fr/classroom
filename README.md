@@ -31,7 +31,8 @@ Mot de passe commun : `monstudio-demo`
 | Rôle | E-mail |
 |---|---|
 | Administrateur | `admin@monstudio.test` |
-| Gérant de studio | `gerant@monstudio.test` |
+| Gérant de studio (validé) | `gerant@monstudio.test` |
+| Demande gérant en attente | `demande@monstudio.test` |
 | Membre | `membre@monstudio.test` |
 
 ## Fonctionnalités
@@ -41,7 +42,8 @@ Mot de passe commun : `monstudio-demo`
 - Fiche studio avec planning sur 7 jours glissants (navigation jusqu'à 12 semaines).
 - Fiche séance : places restantes, réservation, annulation.
 - Espace « Mes réservations » : séances à venir et historique (avec présence).
-- Inscription (membre ou gérant, 5 tentatives par heure et par IP), connexion avec « rester connecté », limitation des tentatives (5 / 15 min).
+- Inscription (5 tentatives par heure et par IP), connexion avec « rester connecté », limitation des tentatives (5 / 15 min).
+- Demande de compte gérant (à l'inscription ou depuis « Mes réservations »), **validée par un administrateur**.
 
 **Gérants (`ROLE_OWNER`)**
 - Création et édition de studios (brouillon / publié, délai d'annulation).
@@ -50,6 +52,7 @@ Mot de passe commun : `monstudio-demo`
 - Liste des inscrits et pointage des présences.
 
 **Administrateurs (`ROLE_ADMIN`)**
+- Validation ou refus des demandes de compte gérant (compteur des demandes en attente dans le menu). Le rôle `ROLE_OWNER` n'est accordé qu'à la validation ; le gérant doit se reconnecter ensuite (Symfony invalide la session quand les rôles changent).
 - Gestion des disciplines (nom, icône Font Awesome).
 - Accès à la gestion de tous les studios.
 
@@ -145,5 +148,5 @@ tests/
 - **Liste d'attente** sur les séances complètes.
 - **Symfony 8.1** n'est pas une LTS (fin de maintenance en janvier 2027) : montée en 8.2 prévue dès la sortie de la version stable.
 - **Recrédit des clients** : à brancher sur `SessionCancelledEvent` quand les crédits / carnets existeront.
-- **Inscription comme gérant** libre (pas de validation par un administrateur) : choix produit à confirmer.
+- **Notification des demandes gérant** : pas encore d'e-mail à l'administrateur ni au demandeur (à brancher avec `symfony/mailer`).
 - L'extension PHP `intl` n'est pas requise ; l'ajouter en production reste recommandé.

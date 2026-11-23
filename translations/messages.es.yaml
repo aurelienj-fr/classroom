@@ -39,6 +39,12 @@ booking_status:
     cancelled: 'Cancelada'
     cancelled_by_studio: 'Cancelada por el estudio'
 
+owner_request:
+    status:
+        pending: 'Pendiente'
+        approved: 'Aprobada'
+        rejected: 'Rechazada'
+
 search:
     city: 'Ciudad o código postal'
     city_placeholder: 'París, Lyon, 33000…'
@@ -106,6 +112,13 @@ session:
         register: 'Regístrate gratis'
 
 account:
+    owner:
+        title: '¿Gestionas un estudio?'
+        text: 'Solicita una cuenta de gestor para publicar tu estudio y tus clases. Nuestro equipo revisa cada solicitud.'
+        pending: 'Nuestro equipo está revisando tu solicitud de cuenta de gestor.'
+        approved: 'Tu solicitud ha sido aprobada: vuelve a iniciar sesión para gestionar tus estudios.'
+        rejected: 'Tu solicitud de cuenta de gestor no ha sido aprobada. Puedes contactarnos o volver a solicitarla.'
+        request: 'Solicitar una cuenta de gestor'
     upcoming: 'Próximas'
     no_upcoming: 'No tienes ninguna reserva próxima.'
     session_cancelled: 'Clase cancelada'
@@ -140,6 +153,7 @@ form:
         password_help: 'Mínimo 12 caracteres.'
         password_confirm: 'Confirmar contraseña'
         studio_owner: 'Gestiono un estudio y quiero publicar mis clases'
+        studio_owner_help: 'Tu cuenta de gestor se activará cuando nuestro equipo la apruebe.'
         agree_terms: 'Acepto las condiciones de uso'
     studio:
         name: 'Nombre del estudio'
@@ -175,6 +189,11 @@ form:
         icon_help: 'Nombre del icono sin el prefijo «fa-» (p. ej.: dumbbell, person-swimming).'
 
 flash:
+    owner_request:
+        sent: 'Tu solicitud de cuenta de gestor se ha enviado. Un administrador la revisará.'
+        approved: 'La cuenta de gestor de %name% está aprobada.'
+        rejected: 'La solicitud de %name% ha sido rechazada.'
+        not_pending: 'Esta solicitud ya ha sido revisada.'
     registration:
         welcome: '¡Bienvenido a monStudio, %name%!'
     booking:
@@ -252,6 +271,15 @@ manage:
         attendance: 'Asistencia'
 
 admin:
+    owner_request:
+        title: 'Solicitudes de gestor'
+        intro: 'Los gestores solo pueden gestionar estudios cuando su solicitud está aprobada.'
+        col_requested_at: 'Solicitada el'
+        col_status: 'Estado'
+        approve: 'Aprobar'
+        reject: 'Rechazar'
+        reject_confirm: '¿Rechazar la solicitud de %name%?'
+        empty: 'No hay solicitudes.'
     discipline:
         title: 'Disciplinas'
         new: 'Nueva disciplina'

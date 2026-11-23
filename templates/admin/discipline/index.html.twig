@@ -3,6 +3,8 @@
 {% block title %}{{ 'admin.discipline.title'|trans }}{% endblock %}
 
 {% block body %}
+    {% include 'admin/_tabs.html.twig' %}
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2 mb-0">{{ 'admin.discipline.title'|trans }}</h1>
         <a href="{{ path('app_admin_discipline_new') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i>{{ 'admin.discipline.new'|trans }}</a>

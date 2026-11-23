@@ -1,0 +1,15 @@
+{% set route = app.current_route ?? '' %}
+{% set pending = pending_owner_requests() %}
+<ul class="nav nav-pills mb-4">
+    <li class="nav-item">
+        <a class="nav-link{{ route starts with 'app_admin_owner_request' ? ' active' }}" href="{{ path('app_admin_owner_request_index') }}">
+            <i class="fa-solid fa-user-check me-1" aria-hidden="true"></i>{{ 'admin.owner_request.title'|trans }}
+            {% if pending > 0 %}<span class="badge text-bg-danger ms-1">{{ pending }}</span>{% endif %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link{{ route starts with 'app_admin_discipline' ? ' active' }}" href="{{ path('app_admin_discipline_index') }}">
+            <i class="fa-solid fa-tags me-1" aria-hidden="true"></i>{{ 'admin.discipline.title'|trans }}
+        </a>
+    </li>
+</ul>

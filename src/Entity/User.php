@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\OwnerRequestStatus;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -60,6 +61,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
+
+    /**
+     * Request to become a studio owner; null when the member never asked.
+     * ROLE_OWNER is only granted once an administrator approves the request.
+     */
+    #[ORM\Column(length: 20, nullable: true, enumType: OwnerRequestStatus::class)]
+    private ?OwnerRequestStatus $ownerRequestStatus = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $ownerRequestedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $ownerReviewedAt = null;
 
     /**
      * @var Collection<int, Studio>
@@ -137,6 +151,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Asks to become a studio owner. A rejected member may ask again; owners and pending requests are left as is.
+     *
+     * @return bool whether a new request was recorded
+     */
+    public function requestOwnerRole(\DateTimeImmutable $at): bool
+    {
+        if ($this->isOwner() || OwnerRequestStatus::Pending === $this->ownerRequestStatus) {
+            return false;
+        }
+
+        $this->ownerRequestStatus = OwnerRequestStatus::Pending;
+        $this->ownerRequestedAt = $at;
+        $this->ownerReviewedAt = null;
+
+        return true;
+    }
+
+    /**
+     * Administrator decision on a pending request: approval grants ROLE_OWNER.
+     */
+    public function reviewOwnerRequest(bool $approved, \DateTimeImmutable $at): void
+    {
+        if (OwnerRequestStatus::Pending !== $this->ownerRequestStatus) {
+            throw new \LogicException('Only a pending owner request can be reviewed.');
+        }
+
+        $this->ownerRequestStatus = $approved ? OwnerRequestStatus::Approved : OwnerRequestStatus::Rejected;
+        $this->ownerReviewedAt = $at;
+        if ($approved) {
+            $this->addRole(self::ROLE_OWNER);
+        }
+    }
+
+    public function getOwnerRequestStatus(): ?OwnerRequestStatus
+    {
+        return $this->ownerRequestStatus;
+    }
+
+    public function getOwnerRequestedAt(): ?\DateTimeImmutable
+    {
+        return $this->ownerRequestedAt;
+    }
+
+    public function getOwnerReviewedAt(): ?\DateTimeImmutable
+    {
+        return $this->ownerReviewedAt;
     }
 
     public function isOwner(): bool

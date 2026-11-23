@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'admin.owner_request.title'|trans }}{% endblock %}
+
+{% block body %}
+    {% include 'admin/_tabs.html.twig' %}
+
+    <h1 class="h2 mb-1">{{ 'admin.owner_request.title'|trans }}</h1>
+    <p class="text-body-secondary mb-4">{{ 'admin.owner_request.intro'|trans }}</p>
+
+    <div class="ms-card overflow-hidden">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr class="small text-body-secondary">
+                        <th scope="col" class="ps-4">{{ 'manage.col.member'|trans }}</th>
+                        <th scope="col">{{ 'manage.col.email'|trans }}</th>
+                        <th scope="col">{{ 'admin.owner_request.col_requested_at'|trans }}</th>
+                        <th scope="col">{{ 'admin.owner_request.col_status'|trans }}</th>
+                        <th scope="col" class="text-end pe-4"><span class="visually-hidden">{{ 'common.actions'|trans }}</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in requests %}
+                        {% set status = user.ownerRequestStatus %}
+                        <tr>
+                            <td class="ps-4 fw-semibold">{{ user.fullName }}</td>
+                            <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+                            <td class="small text-nowrap">{{ user.ownerRequestedAt ? user.ownerRequestedAt|local_date('date') : '—' }}</td>
+                            <td>
+                                <span class="badge {{ {pending: 'text-bg-warning', approved: 'text-bg-success', rejected: 'text-bg-secondary'}[status.value] }}">{{ status|trans }}</span>
+                                {% if user.ownerReviewedAt %}<div class="small text-body-secondary">{{ user.ownerReviewedAt|local_date('date') }}</div>{% endif %}
+                            </td>
+                            <td class="text-end pe-4">
+                                {% if status.value == 'pending' %}
+                                    <div class="d-inline-flex gap-2">
+                                        <form method="post" action="{{ path('app_admin_owner_request_review', {id: user.id, decision: 'approve'}) }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('review-owner-' ~ user.id) }}">
+                                            <button type="submit" class="btn btn-sm btn-success"><i class="fa-solid fa-check me-1" aria-hidden="true"></i>{{ 'admin.owner_request.approve'|trans }}</button>
+                                        </form>
+                                        <form method="post" action="{{ path('app_admin_owner_request_review', {id: user.id, decision: 'reject'}) }}" data-confirm="{{ 'admin.owner_request.reject_confirm'|trans({'%name%': user.fullName}) }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('review-owner-' ~ user.id) }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-xmark me-1" aria-hidden="true"></i>{{ 'admin.owner_request.reject'|trans }}</button>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="5" class="text-center text-body-secondary py-4">{{ 'admin.owner_request.empty'|trans }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

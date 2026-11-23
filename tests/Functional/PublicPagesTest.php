@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional;
 
 use App\Entity\User;
+use App\Enum\OwnerRequestStatus;
 use App\Tests\Support\TestData;
 
 final class PublicPagesTest extends WebTestCaseHelper
@@ -57,7 +58,7 @@ final class PublicPagesTest extends WebTestCaseHelper
         self::assertResponseStatusCodeSame(404);
     }
 
-    public function testRegistrationCreatesAnOwnerAccountAndLogsIn(): void
+    public function testOwnerRegistrationCreatesAPendingRequestOnly(): void
     {
         $this->client->request('GET', '/fr/inscription');
         $this->client->submitForm('Créer mon compte', [
@@ -70,14 +71,17 @@ final class PublicPagesTest extends WebTestCaseHelper
             'registration_form[agreeTerms]' => true,
         ]);
 
-        self::assertResponseRedirects('/fr/gestion');
+        self::assertResponseRedirects('/fr/compte/reservations');
         $user = $this->entityManager()->getRepository(User::class)->findOneBy(['email' => 'zoe@example.test']);
         self::assertNotNull($user);
-        self::assertContains(User::ROLE_OWNER, $user->getRoles());
+        self::assertNotContains(User::ROLE_OWNER, $user->getRoles(), 'An administrator must validate owners.');
+        self::assertSame(OwnerRequestStatus::Pending, $user->getOwnerRequestStatus());
 
         $this->client->followRedirect();
-        self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('h1', 'Mes studios');
+        self::assertSelectorTextContains('.alert-info', 'demande de compte gérant a été envoyée');
+
+        $this->client->request('GET', '/fr/gestion');
+        self::assertResponseStatusCodeSame(403);
     }
 
     public function testRegistrationRejectsShortPasswords(): void

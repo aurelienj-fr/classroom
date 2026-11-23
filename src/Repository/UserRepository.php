@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Enum\OwnerRequestStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -32,5 +33,30 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->flush();
+    }
+
+    /**
+     * Pending owner requests first (oldest first), then the most recently reviewed ones.
+     *
+     * @return list<User>
+     */
+    public function findOwnerRequests(int $limit = 100): array
+    {
+        /** @var list<User> */
+        return $this->createQueryBuilder('u')
+            ->addSelect('CASE WHEN u.ownerRequestStatus = :pending THEN 0 ELSE 1 END AS HIDDEN pendingFirst')
+            ->andWhere('u.ownerRequestStatus IS NOT NULL')
+            ->setParameter('pending', OwnerRequestStatus::Pending)
+            ->orderBy('pendingFirst', 'ASC')
+            ->addOrderBy('u.ownerReviewedAt', 'DESC')
+            ->addOrderBy('u.ownerRequestedAt', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countPendingOwnerRequests(): int
+    {
+        return $this->count(['ownerRequestStatus' => OwnerRequestStatus::Pending]);
     }
 }

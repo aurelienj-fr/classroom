@@ -44,6 +44,34 @@
         </div>
     {% endif %}
 
+    {% if not is_granted('ROLE_OWNER') %}
+        {% set owner_status = app.user.ownerRequestStatus %}
+        <section class="ms-card p-4 mb-5 d-md-flex align-items-center justify-content-between gap-4">
+            <div>
+                <h2 class="h5 mb-1"><i class="fa-solid fa-store text-primary me-2" aria-hidden="true"></i>{{ 'account.owner.title'|trans }}</h2>
+                <p class="text-body-secondary mb-md-0">
+                    {% if owner_status and owner_status.value == 'pending' %}
+                        {{ 'account.owner.pending'|trans }}
+                    {% elseif owner_status and owner_status.value == 'approved' %}
+                        {{ 'account.owner.approved'|trans }}
+                    {% elseif owner_status and owner_status.value == 'rejected' %}
+                        {{ 'account.owner.rejected'|trans }}
+                    {% else %}
+                        {{ 'account.owner.text'|trans }}
+                    {% endif %}
+                </p>
+            </div>
+            {% if owner_status is null or owner_status.value == 'rejected' %}
+                <form method="post" action="{{ path('app_account_owner_request') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('owner-request') }}">
+                    <button type="submit" class="btn btn-outline-primary text-nowrap">{{ 'account.owner.request'|trans }}</button>
+                </form>
+            {% elseif owner_status.value == 'pending' %}
+                <span class="badge text-bg-warning">{{ owner_status|trans }}</span>
+            {% endif %}
+        </section>
+    {% endif %}
+
     <h2 class="h5 mb-3">{{ 'account.history'|trans }}</h2>
     {% if past is empty %}
         <p class="text-body-secondary">{{ 'account.no_history'|trans }}</p>

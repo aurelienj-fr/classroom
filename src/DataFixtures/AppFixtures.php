@@ -20,7 +20,8 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 /**
  * Demo data: fictional studios, a weekly timetable over the past week and the next three weeks.
  *
- * Accounts (password "monstudio-demo"): admin@monstudio.test, gerant@monstudio.test, membre@monstudio.test.
+ * Accounts (password "monstudio-demo"): admin@monstudio.test, gerant@monstudio.test, membre@monstudio.test,
+ * demande@monstudio.test (pending owner request).
  */
 final class AppFixtures extends Fixture
 {
@@ -59,8 +60,14 @@ final class AppFixtures extends Fixture
         }
 
         $admin = $this->createUser($manager, 'admin@monstudio.test', 'Alex', 'Martin', [User::ROLE_ADMIN]);
-        $owner = $this->createUser($manager, 'gerant@monstudio.test', 'Camille', 'Durand', [User::ROLE_OWNER]);
+        // Owners go through the administrator validation workflow.
+        $owner = $this->createUser($manager, 'gerant@monstudio.test', 'Camille', 'Durand');
+        $owner->requestOwnerRole($this->clock->now()->modify('-10 days'));
+        $owner->reviewOwnerRequest(true, $this->clock->now()->modify('-9 days'));
         $member = $this->createUser($manager, 'membre@monstudio.test', 'Léa', 'Bernard');
+        // A pending owner request to demonstrate the administrator validation page.
+        $applicant = $this->createUser($manager, 'demande@monstudio.test', 'Nora', 'Garcia');
+        $applicant->requestOwnerRole($this->clock->now()->modify('-1 day'));
         $otherMembers = [
             $this->createUser($manager, 'hugo@monstudio.test', 'Hugo', 'Petit'),
             $this->createUser($manager, 'ines@monstudio.test', 'Inès', 'Moreau'),

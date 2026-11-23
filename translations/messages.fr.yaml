@@ -39,6 +39,12 @@ booking_status:
     cancelled: 'Annulée'
     cancelled_by_studio: 'Annulée par le studio'
 
+owner_request:
+    status:
+        pending: 'En attente'
+        approved: 'Validée'
+        rejected: 'Refusée'
+
 search:
     city: 'Ville ou code postal'
     city_placeholder: 'Paris, Lyon, 33000…'
@@ -106,6 +112,13 @@ session:
         register: 'Inscrivez-vous gratuitement'
 
 account:
+    owner:
+        title: 'Vous gérez un studio ?'
+        text: 'Demandez un compte gérant pour publier votre studio et vos cours. Notre équipe valide chaque demande.'
+        pending: 'Votre demande de compte gérant est en cours de validation par notre équipe.'
+        approved: 'Votre demande a été acceptée : reconnectez-vous pour accéder à la gestion de vos studios.'
+        rejected: "Votre demande de compte gérant n'a pas été acceptée. Vous pouvez nous contacter ou refaire une demande."
+        request: 'Demander un compte gérant'
     upcoming: 'À venir'
     no_upcoming: "Vous n'avez aucune réservation à venir."
     session_cancelled: 'Séance annulée'
@@ -140,6 +153,7 @@ form:
         password_help: '12 caractères minimum.'
         password_confirm: 'Confirmation du mot de passe'
         studio_owner: 'Je gère un studio et souhaite publier mes cours'
+        studio_owner_help: 'Votre compte gérant sera activé après validation par notre équipe.'
         agree_terms: "J'accepte les conditions d'utilisation"
     studio:
         name: 'Nom du studio'
@@ -175,6 +189,11 @@ form:
         icon_help: "Nom de l'icône sans le préfixe « fa- » (ex. : dumbbell, person-swimming)."
 
 flash:
+    owner_request:
+        sent: 'Votre demande de compte gérant a été envoyée. Un administrateur va la vérifier.'
+        approved: 'Le compte gérant de %name% est validé.'
+        rejected: 'La demande de %name% a été refusée.'
+        not_pending: "Cette demande a déjà été traitée."
     registration:
         welcome: 'Bienvenue sur monStudio, %name% !'
     booking:
@@ -252,6 +271,15 @@ manage:
         attendance: 'Présence'
 
 admin:
+    owner_request:
+        title: 'Demandes gérant'
+        intro: "Les gérants n'accèdent à la gestion des studios qu'après validation."
+        col_requested_at: 'Demandée le'
+        col_status: 'Statut'
+        approve: 'Valider'
+        reject: 'Refuser'
+        reject_confirm: 'Refuser la demande de %name% ?'
+        empty: 'Aucune demande.'
     discipline:
         title: 'Disciplines'
         new: 'Nouvelle discipline'

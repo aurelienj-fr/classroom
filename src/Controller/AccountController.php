@@ -10,6 +10,7 @@ use App\Entity\Booking;
 use App\Entity\User;
 use App\Repository\BookingRepository;
 use App\Security\Voter\BookingVoter;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -45,6 +46,21 @@ final class AccountController extends AbstractController
             'past' => $bookingRepository->findPastForMember($user, $now),
             'cancellable' => $cancellable,
         ]);
+    }
+
+    #[Route(['fr' => '/devenir-gerant', 'en' => '/become-owner', 'es' => '/ser-gestor'], name: 'app_account_owner_request', methods: ['POST'])]
+    #[IsCsrfTokenValid('owner-request')]
+    public function requestOwnerRole(
+        #[CurrentUser] User $user,
+        EntityManagerInterface $entityManager,
+        ClockInterface $clock,
+    ): Response {
+        if ($user->requestOwnerRole($clock->now())) {
+            $entityManager->flush();
+            $this->addFlash('info', new TranslatableMessage('flash.owner_request.sent'));
+        }
+
+        return $this->redirectToRoute('app_account_bookings');
     }
 
     #[Route(['fr' => '/reservations/{id}/annuler', 'en' => '/bookings/{id}/cancel', 'es' => '/reservas/{id}/cancelar'], name: 'app_account_booking_cancel', requirements: ['id' => '\d+'], methods: ['POST'])]

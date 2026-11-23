@@ -215,3 +215,9 @@ a.ms-card:hover, .ms-card-hover:hover {
 
 .ms-session-time.is-wide { flex: 0 0 6.5rem; }
 .ms-session-time.is-date { flex: 0 0 9.5rem; }
+
+.nav-pills {
+    --bs-nav-pills-link-active-bg: var(--ms-primary);
+    --bs-nav-link-color: var(--ms-primary);
+    --bs-nav-link-hover-color: var(--ms-primary-dark);
+}

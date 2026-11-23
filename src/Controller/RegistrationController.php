@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Clock\ClockInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Target;
@@ -30,6 +31,7 @@ final class RegistrationController extends AbstractController
         #[Target('registration')]
         RateLimiterFactoryInterface $registrationLimiter,
         TranslatorInterface $translator,
+        ClockInterface $clock,
     ): Response {
         if (null !== $this->getUser()) {
             return $this->redirectToRoute('app_home');
@@ -50,18 +52,20 @@ final class RegistrationController extends AbstractController
             $plainPassword = $form->get('plainPassword')->getData();
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
 
-            $isOwner = true === $form->get('studioOwner')->getData();
-            if ($isOwner) {
-                $user->addRole(User::ROLE_OWNER);
-            }
+            // Owners are validated by a platform administrator: the account starts as a member.
+            $ownerRequested = true === $form->get('studioOwner')->getData()
+                && $user->requestOwnerRole($clock->now());
 
             $entityManager->persist($user);
             $entityManager->flush();
 
             $security->login($user, 'form_login', 'main');
             $this->addFlash('success', new TranslatableMessage('flash.registration.welcome', ['%name%' => $user->getFirstName()]));
+            if ($ownerRequested) {
+                $this->addFlash('info', new TranslatableMessage('flash.owner_request.sent'));
+            }
 
-            return $this->redirectToRoute($isOwner ? 'app_manage_dashboard' : 'app_studio_index');
+            return $this->redirectToRoute($ownerRequested ? 'app_account_bookings' : 'app_studio_index');
         }
 
         return $this->render('registration/register.html.twig', [

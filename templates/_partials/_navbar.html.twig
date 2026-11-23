@@ -31,8 +31,10 @@
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
-                        <a class="nav-link{{ route starts with 'app_admin' ? ' active' }}" href="{{ path('app_admin_discipline_index') }}">
+                        {% set pending_owners = pending_owner_requests() %}
+                        <a class="nav-link{{ route starts with 'app_admin' ? ' active' }}" href="{{ path('app_admin_owner_request_index') }}">
                             <i class="fa-solid fa-sliders me-1" aria-hidden="true"></i>{{ 'nav.admin'|trans }}
+                            {% if pending_owners > 0 %}<span class="badge rounded-pill text-bg-danger ms-1" title="{{ 'admin.owner_request.title'|trans }}">{{ pending_owners }}</span>{% endif %}
                         </a>
                     </li>
                 {% endif %}
