@@ -1,0 +1,5 @@
+{% extends 'emails/layout.html.twig' %}
+{% block content %}
+    <p style="margin:0 0 16px;">{{ 'email.owner_request_submitted.intro'|trans({'%name%': applicant.fullName, '%email%': applicant.email}) }}</p>
+    {% include 'emails/_button.html.twig' with {href: url('app_admin_owner_request_index', {_locale: locale}), label: 'email.owner_request_submitted.review'|trans} %}
+{% endblock %}

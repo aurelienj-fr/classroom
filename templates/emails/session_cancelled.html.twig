@@ -1,0 +1,7 @@
+{% extends 'emails/layout.html.twig' %}
+{% block content %}
+    <p style="margin:0 0 16px;">{{ 'email.session_cancelled.intro'|trans({'%studio%': session.studio.name}) }}</p>
+    {% include 'emails/_session.html.twig' %}
+    <p style="margin:0;">{{ 'email.session_cancelled.booking_cancelled'|trans }}</p>
+    {% include 'emails/_button.html.twig' with {href: url('app_studio_show', {slug: session.studio.slug, _locale: locale}), label: 'email.see_schedule'|trans} %}
+{% endblock %}

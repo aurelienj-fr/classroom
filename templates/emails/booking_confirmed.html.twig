@@ -1,0 +1,7 @@
+{% extends 'emails/layout.html.twig' %}
+{% block content %}
+    <p style="margin:0 0 16px;">{{ 'email.booking_confirmed.intro'|trans }}</p>
+    {% include 'emails/_session.html.twig' %}
+    <p style="margin:0;">{{ 'email.booking_confirmed.cancel_policy'|trans({'%hours%': session.studio.cancellationDeadlineHours}) }}</p>
+    {% include 'emails/_button.html.twig' with {href: url('app_account_bookings', {_locale: locale}), label: 'nav.my_bookings'|trans} %}
+{% endblock %}

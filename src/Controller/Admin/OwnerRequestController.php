@@ -6,9 +6,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Enum\OwnerRequestStatus;
+use App\Owner\OwnerRoleManager;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Psr\Clock\ClockInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +33,7 @@ final class OwnerRequestController extends AbstractController
 
     #[Route('/{id}/{decision}', name: 'app_admin_owner_request_review', requirements: ['id' => '\d+', 'decision' => 'approve|reject'], methods: ['POST'])]
     #[IsCsrfTokenValid(new Expression('"review-owner-" ~ args["user"].getId()'))]
-    public function review(User $user, string $decision, EntityManagerInterface $entityManager, ClockInterface $clock): Response
+    public function review(User $user, string $decision, OwnerRoleManager $ownerRoleManager): Response
     {
         if (OwnerRequestStatus::Pending !== $user->getOwnerRequestStatus()) {
             $this->addFlash('warning', new TranslatableMessage('flash.owner_request.not_pending'));
@@ -43,8 +42,7 @@ final class OwnerRequestController extends AbstractController
         }
 
         $approved = 'approve' === $decision;
-        $user->reviewOwnerRequest($approved, $clock->now());
-        $entityManager->flush();
+        $ownerRoleManager->review($user, $approved);
 
         $this->addFlash('success', new TranslatableMessage(
             $approved ? 'flash.owner_request.approved' : 'flash.owner_request.rejected',

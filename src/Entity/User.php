@@ -63,6 +63,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private \DateTimeImmutable $createdAt;
 
     /**
+     * Preferred language, used for e-mails (updated at registration and at each login).
+     */
+    #[ORM\Column(length: 5, options: ['default' => 'fr'])]
+    private string $locale = 'fr';
+
+    /**
      * Request to become a studio owner; null when the member never asked.
      * ROLE_OWNER is only granted once an administrator approves the request.
      */
@@ -187,6 +193,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
     }
 
+    /**
+     * Goes back to a simple member: ROLE_OWNER is removed and a new request will be needed.
+     */
+    public function relinquishOwnerRole(): void
+    {
+        $this->roles = array_values(array_diff($this->roles, [self::ROLE_OWNER]));
+        $this->ownerRequestStatus = null;
+        $this->ownerRequestedAt = null;
+        $this->ownerReviewedAt = null;
+    }
+
     public function getOwnerRequestStatus(): ?OwnerRequestStatus
     {
         return $this->ownerRequestStatus;
@@ -259,6 +276,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFullName(): string
     {
         return trim($this->firstName.' '.$this->lastName);
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale): static
+    {
+        $this->locale = $locale;
+
+        return $this;
     }
 
     public function getCreatedAt(): \DateTimeImmutable

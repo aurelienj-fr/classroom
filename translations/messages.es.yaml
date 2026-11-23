@@ -189,6 +189,9 @@ form:
         icon_help: 'Nombre del icono sin el prefijo «fa-» (p. ej.: dumbbell, person-swimming).'
 
 flash:
+    owner_relinquish:
+        done: 'Vuelves a ser un usuario normal. Estudios despublicados: %studios%. Sesiones canceladas: %sessions%.'
+        admin: 'Los administradores conservan sus derechos de gestión.'
     owner_request:
         sent: 'Tu solicitud de cuenta de gestor se ha enviado. Un administrador la revisará.'
         approved: 'La cuenta de gestor de %name% está aprobada.'
@@ -231,6 +234,11 @@ booking:
 manage:
     my_studios: 'Mis estudios'
     dashboard:
+        relinquish:
+            title: 'Volver a ser un usuario normal'
+            text: 'Tus estudios se despublicarán (guardados como borradores) y tus próximas sesiones se cancelarán: sus inscritos recibirán un correo.'
+            button: 'Dejar de ser gestor'
+            confirm: '¿Dejar de ser gestor? Tus estudios se despublicarán y todas tus próximas sesiones se cancelarán.'
         empty_title: 'Crea tu primer estudio'
         empty_text: 'Indica tus datos de contacto y tus disciplinas y, después, programa tus clases.'
         create_first: 'Crear mi estudio'
@@ -301,3 +309,37 @@ error:
     generic:
         title: 'Error'
         text: 'Se ha producido un error. Inténtalo de nuevo en unos instantes.'
+
+email:
+    greeting: 'Hola %name%:'
+    footer: 'Este correo te lo envía monStudio tras una acción en tu cuenta. Por favor, no respondas.'
+    see_schedule: 'Ver el horario del estudio'
+    booking_confirmed:
+        subject: 'Reserva confirmada: %activity%'
+        intro: 'Tu plaza está reservada para la siguiente clase:'
+        cancel_policy: 'Puedes cancelar gratis hasta %hours% h antes del inicio de la clase.'
+    booking_cancelled:
+        subject: 'Reserva cancelada: %activity%'
+        intro: 'Te confirmamos la cancelación de tu reserva:'
+    session_cancelled:
+        subject: 'Clase cancelada: %activity%'
+        intro: '%studio% ha tenido que cancelar la siguiente clase:'
+        booking_cancelled: 'Tu reserva se ha cancelado automáticamente. Sentimos las molestias.'
+    owner_request_submitted:
+        subject: 'Nueva solicitud de cuenta de gestor: %name%'
+        intro: '%name% (%email%) solicita una cuenta de gestor para publicar su estudio.'
+        review: 'Revisar la solicitud'
+    owner_request_approved:
+        subject: 'Tu cuenta de gestor está aprobada'
+        intro: 'Buenas noticias: tu solicitud de cuenta de gestor ha sido aprobada.'
+        next: 'Vuelve a iniciar sesión para crear tu estudio, tus clases y tu horario.'
+    owner_request_rejected:
+        subject: 'Tu solicitud de cuenta de gestor no ha sido aprobada'
+        intro: 'Por ahora, tu solicitud de cuenta de gestor no ha sido aprobada.'
+        next: 'Puedes volver a solicitarla desde tu página «Mis reservas».'
+    owner_role_relinquished:
+        subject: 'Vuelves a ser un usuario normal'
+        intro: 'Tu cuenta de gestor se ha desactivado a petición tuya. Puedes seguir reservando clases.'
+        studios: '{0} Ningún estudio que despublicar.|{1} Se ha despublicado 1 estudio (guardado como borrador).|]1,Inf[ Se han despublicado %count% estudios (guardados como borradores).'
+        sessions: '{0} Ninguna sesión próxima que cancelar.|{1} Se ha cancelado 1 sesión próxima; se ha avisado a sus inscritos.|]1,Inf[ Se han cancelado %count% sesiones próximas; se ha avisado a sus inscritos.'
+        again: 'Puedes volver a solicitar una cuenta de gestor cuando quieras; tus estudios volverán a estar disponibles.'

@@ -24,6 +24,15 @@ docker compose exec app php bin/console doctrine:fixtures:load -n
 
 Application : <http://localhost:8080> (redirige vers `/fr`, `/en` ou `/es` selon la langue du navigateur)
 
+Services lancés par `docker compose up` :
+
+| Service | Rôle |
+|---|---|
+| `app` | Application (Apache + PHP 8.4), <http://localhost:8080> |
+| `database` | MySQL 8.4 |
+| `worker` | Envoi des e-mails en file d'attente (`messenger:consume async`) |
+| `mailer` | Mailpit (développement) : intercepte tous les e-mails, interface <http://localhost:8025> |
+
 ### Comptes de démonstration
 
 Mot de passe commun : `monstudio-demo`
@@ -50,11 +59,28 @@ Mot de passe commun : `monstudio-demo`
 - Cours (modèles : discipline, niveau, durée, capacité par défaut).
 - Séances : création unitaire ou répétée chaque semaine (jusqu'à 26 semaines), modification (séances à venir et non annulées uniquement), annulation / rétablissement.
 - Liste des inscrits et pointage des présences.
+- **Redevenir simple usager** (tableau de bord gérant) : rôle gérant retiré, studios dépubliés (conservés en brouillon), séances à venir annulées avec notification des inscrits. Une nouvelle demande gérant reste possible.
 
 **Administrateurs (`ROLE_ADMIN`)**
 - Validation ou refus des demandes de compte gérant (compteur des demandes en attente dans le menu). Le rôle `ROLE_OWNER` n'est accordé qu'à la validation ; le gérant doit se reconnecter ensuite (Symfony invalide la session quand les rôles changent).
 - Gestion des disciplines (nom, icône Font Awesome).
 - Accès à la gestion de tous les studios.
+
+## Notifications par e-mail
+
+Envoyées avec Symfony Mailer, **en asynchrone** (Messenger, transport Doctrine) : la requête ne fait que mettre l'e-mail en file, le `worker` l'envoie ; en cas d'échec, 3 nouvelles tentatives puis transport `failed` (`php bin/console messenger:failed:show`).
+
+| Événement | Destinataire |
+|---|---|
+| Réservation confirmée / annulée par le membre | Membre |
+| Séance annulée par le studio (y compris quand le gérant renonce à son rôle) | Chaque membre inscrit |
+| Nouvelle demande de compte gérant | Tous les administrateurs |
+| Demande gérant validée / refusée | Demandeur |
+| Retour au statut de simple usager | Ancien gérant |
+
+- Chaque e-mail est rédigé dans la **langue de l'utilisateur** (mémorisée à l'inscription et à chaque connexion), avec une version texte générée automatiquement.
+- Code : `App\Notification\EmailNotifier` (construction des e-mails), `BookingEmailListener` (événements de réservation), gabarits dans `templates/emails/`.
+- Configuration : `MAILER_DSN` et `MAILER_FROM` (`.env`) ; en test, les e-mails restent en mémoire (`assertQueuedEmailCount()`).
 
 ## Multilingue (FR, EN, ES)
 
@@ -107,6 +133,7 @@ L'image Docker fournie est une image de **développement**. En production :
 - un `APP_SECRET` aléatoire et privé (`php bin/console secrets:set APP_SECRET` ou variable d'environnement) : il signe notamment les cookies « rester connecté ». Ne jamais réutiliser celui de `.env.dev` ;
 - HTTPS obligatoire (les cookies passent alors en `Secure`) ;
 - un stockage de cache partagé (Redis…) si plusieurs serveurs, pour les limiteurs de tentatives ;
+- un vrai `MAILER_DSN` (SMTP ou API d'un fournisseur) et `MAILER_FROM` sur un domaine autorisé (SPF/DKIM) ; un `worker` supervisé (systemd, Supervisor…) qui exécute `messenger:consume async` ;
 - l'extension PHP `intl` recommandée.
 
 ## Qualité
@@ -148,5 +175,4 @@ tests/
 - **Liste d'attente** sur les séances complètes.
 - **Symfony 8.1** n'est pas une LTS (fin de maintenance en janvier 2027) : montée en 8.2 prévue dès la sortie de la version stable.
 - **Recrédit des clients** : à brancher sur `SessionCancelledEvent` quand les crédits / carnets existeront.
-- **Notification des demandes gérant** : pas encore d'e-mail à l'administrateur ni au demandeur (à brancher avec `symfony/mailer`).
 - L'extension PHP `intl` n'est pas requise ; l'ajouter en production reste recommandé.

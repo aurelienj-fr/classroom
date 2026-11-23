@@ -1,0 +1,35 @@
+{# Base layout of the platform e-mails: inline styles only (e-mail clients ignore stylesheets). #}
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ email.subject }}</title>
+</head>
+<body style="margin:0;padding:0;background:#f7f4ef;font-family:Arial,Helvetica,sans-serif;color:#1d2433;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f4ef;padding:24px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border:1px solid #e6e1d8;border-radius:12px;">
+                    <tr>
+                        <td style="padding:20px 28px;border-bottom:1px solid #e6e1d8;">
+                            <a href="{{ url('app_home', {_locale: locale}) }}" style="font-size:20px;font-weight:bold;color:#1d2433;text-decoration:none;">mon<span style="color:#0f766e;">Studio</span></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:28px;font-size:15px;line-height:1.6;">
+                            <p style="margin:0 0 16px;">{{ 'email.greeting'|trans({'%name%': recipient.firstName}) }}</p>
+                            {% block content %}{% endblock %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:16px 28px;border-top:1px solid #e6e1d8;font-size:12px;color:#6b7280;">
+                            {{ 'email.footer'|trans }}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

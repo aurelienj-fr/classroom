@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Booking;
 
+use App\Booking\Event\BookingCancelledEvent;
+use App\Booking\Event\BookingConfirmedEvent;
 use App\Booking\Event\SessionCancelledEvent;
 use App\Entity\Booking;
 use App\Entity\ClassSession;
@@ -41,7 +43,7 @@ final readonly class BookingManager
     {
         $sessionId = $session->getId() ?? throw BookingException::sessionNotFound();
 
-        return $this->transactional(function () use ($member, $sessionId): Booking {
+        $booking = $this->transactional(function () use ($member, $sessionId): Booking {
             // find() with a lock re-reads the row even when the entity is already in the identity map.
             $session = $this->sessionRepository->findForUpdate($sessionId)
                 ?? throw BookingException::sessionNotFound();
@@ -67,6 +69,10 @@ final readonly class BookingManager
 
             return $booking;
         });
+
+        $this->eventDispatcher->dispatch(new BookingConfirmedEvent($booking));
+
+        return $booking;
     }
 
     /**
@@ -87,6 +93,8 @@ final readonly class BookingManager
 
         $booking->cancel($now);
         $this->entityManager->flush();
+
+        $this->eventDispatcher->dispatch(new BookingCancelledEvent($booking));
     }
 
     public function canStillCancel(Booking $booking, ?\DateTimeImmutable $now = null): bool

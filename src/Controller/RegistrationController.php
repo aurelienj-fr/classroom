@@ -6,8 +6,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Owner\OwnerRoleManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Clock\ClockInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Target;
@@ -31,7 +31,7 @@ final class RegistrationController extends AbstractController
         #[Target('registration')]
         RateLimiterFactoryInterface $registrationLimiter,
         TranslatorInterface $translator,
-        ClockInterface $clock,
+        OwnerRoleManager $ownerRoleManager,
     ): Response {
         if (null !== $this->getUser()) {
             return $this->redirectToRoute('app_home');
@@ -51,13 +51,14 @@ final class RegistrationController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
-
-            // Owners are validated by a platform administrator: the account starts as a member.
-            $ownerRequested = true === $form->get('studioOwner')->getData()
-                && $user->requestOwnerRole($clock->now());
+            $user->setLocale($request->getLocale());
 
             $entityManager->persist($user);
             $entityManager->flush();
+
+            // Owners are validated by a platform administrator: the account starts as a member.
+            $ownerRequested = true === $form->get('studioOwner')->getData()
+                && $ownerRoleManager->request($user);
 
             $security->login($user, 'form_login', 'main');
             $this->addFlash('success', new TranslatableMessage('flash.registration.welcome', ['%name%' => $user->getFirstName()]));

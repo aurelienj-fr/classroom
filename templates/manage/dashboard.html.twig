@@ -42,4 +42,17 @@
             {% endfor %}
         </div>
     {% endif %}
+
+    {% if not is_granted('ROLE_ADMIN') %}
+        <section class="ms-card border-danger-subtle p-4 mt-5 d-md-flex align-items-center justify-content-between gap-4">
+            <div>
+                <h2 class="h5 mb-1">{{ 'manage.dashboard.relinquish.title'|trans }}</h2>
+                <p class="text-body-secondary mb-md-0">{{ 'manage.dashboard.relinquish.text'|trans }}</p>
+            </div>
+            <form method="post" action="{{ path('app_account_owner_relinquish') }}" data-confirm="{{ 'manage.dashboard.relinquish.confirm'|trans }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('owner-relinquish') }}">
+                <button type="submit" class="btn btn-outline-danger text-nowrap">{{ 'manage.dashboard.relinquish.button'|trans }}</button>
+            </form>
+        </section>
+    {% endif %}
 {% endblock %}

@@ -1,0 +1,6 @@
+{% extends 'emails/layout.html.twig' %}
+{% block content %}
+    <p style="margin:0 0 16px;">{{ 'email.owner_request_approved.intro'|trans }}</p>
+    <p style="margin:0;">{{ 'email.owner_request_approved.next'|trans }}</p>
+    {% include 'emails/_button.html.twig' with {href: url('app_login', {_locale: locale}), label: 'nav.login'|trans} %}
+{% endblock %}

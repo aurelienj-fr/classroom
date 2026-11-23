@@ -1,0 +1,9 @@
+{% extends 'emails/layout.html.twig' %}
+{% block content %}
+    <p style="margin:0 0 16px;">{{ 'email.owner_role_relinquished.intro'|trans }}</p>
+    <ul style="margin:0 0 16px;padding-left:20px;">
+        <li>{{ 'email.owner_role_relinquished.studios'|trans({'%count%': unpublished_studios}) }}</li>
+        <li>{{ 'email.owner_role_relinquished.sessions'|trans({'%count%': cancelled_sessions}) }}</li>
+    </ul>
+    <p style="margin:0;">{{ 'email.owner_role_relinquished.again'|trans }}</p>
+{% endblock %}

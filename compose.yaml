@@ -6,8 +6,22 @@ services:
     depends_on:
       database:
         condition: service_healthy
-    environment:
+    environment: &app-environment
       DATABASE_URL: "mysql://${MYSQL_USER:-app}:${MYSQL_PASSWORD:-ChangeMe}@database:3306/${MYSQL_DATABASE:-monstudio}?serverVersion=8.4.0&charset=utf8mb4"
+    volumes:
+      - ./:/var/www/html:rw
+
+  # Sends queued e-mails (Messenger "async" transport).
+  worker:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    command: ["php", "bin/console", "messenger:consume", "async", "--time-limit=3600", "-vv"]
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    environment: *app-environment
     volumes:
       - ./:/var/www/html:rw
 

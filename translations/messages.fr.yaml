@@ -189,6 +189,9 @@ form:
         icon_help: "Nom de l'icône sans le préfixe « fa- » (ex. : dumbbell, person-swimming)."
 
 flash:
+    owner_relinquish:
+        done: 'Vous êtes redevenu(e) simple usager. Studios dépubliés : %studios%. Séances annulées : %sessions%.'
+        admin: 'Un administrateur conserve ses droits de gestion.'
     owner_request:
         sent: 'Votre demande de compte gérant a été envoyée. Un administrateur va la vérifier.'
         approved: 'Le compte gérant de %name% est validé.'
@@ -231,6 +234,11 @@ booking:
 manage:
     my_studios: 'Mes studios'
     dashboard:
+        relinquish:
+            title: 'Redevenir simple usager'
+            text: 'Vos studios seront dépubliés (conservés en brouillon) et vos séances à venir annulées : leurs inscrits seront prévenus par e-mail.'
+            button: 'Ne plus être gérant'
+            confirm: 'Ne plus être gérant ? Vos studios seront dépubliés et toutes vos séances à venir annulées.'
         empty_title: 'Créez votre premier studio'
         empty_text: 'Renseignez vos coordonnées et vos disciplines, puis planifiez vos cours.'
         create_first: 'Créer mon studio'
@@ -301,3 +309,37 @@ error:
     generic:
         title: 'Erreur'
         text: 'Une erreur est survenue. Réessayez dans quelques instants.'
+
+email:
+    greeting: 'Bonjour %name%,'
+    footer: "Cet e-mail vous est envoyé par monStudio suite à une action sur votre compte. Merci de ne pas y répondre."
+    see_schedule: 'Voir le planning du studio'
+    booking_confirmed:
+        subject: 'Réservation confirmée : %activity%'
+        intro: 'Votre place est réservée pour la séance suivante :'
+        cancel_policy: "Vous pouvez annuler gratuitement jusqu'à %hours% h avant le début du cours."
+    booking_cancelled:
+        subject: 'Réservation annulée : %activity%'
+        intro: "Nous confirmons l'annulation de votre réservation :"
+    session_cancelled:
+        subject: 'Séance annulée : %activity%'
+        intro: '%studio% a dû annuler la séance suivante :'
+        booking_cancelled: 'Votre réservation a été annulée automatiquement. Nous sommes désolés pour ce contretemps.'
+    owner_request_submitted:
+        subject: 'Nouvelle demande de compte gérant : %name%'
+        intro: '%name% (%email%) demande un compte gérant pour publier son studio.'
+        review: 'Examiner la demande'
+    owner_request_approved:
+        subject: 'Votre compte gérant est validé'
+        intro: 'Bonne nouvelle : votre demande de compte gérant a été acceptée.'
+        next: 'Reconnectez-vous pour créer votre studio, vos cours et votre planning.'
+    owner_request_rejected:
+        subject: "Votre demande de compte gérant n'a pas été acceptée"
+        intro: "Votre demande de compte gérant n'a pas été acceptée pour le moment."
+        next: 'Vous pouvez refaire une demande depuis votre espace « Mes réservations ».'
+    owner_role_relinquished:
+        subject: 'Vous êtes redevenu(e) simple usager'
+        intro: "Votre compte gérant a été désactivé à votre demande. Vous pouvez toujours réserver des cours."
+        studios: '{0} Aucun studio à dépublier.|{1} 1 studio a été dépublié (conservé en brouillon).|]1,Inf[ %count% studios ont été dépubliés (conservés en brouillon).'
+        sessions: '{0} Aucune séance à venir à annuler.|{1} 1 séance à venir a été annulée ; ses inscrits ont été prévenus.|]1,Inf[ %count% séances à venir ont été annulées ; leurs inscrits ont été prévenus.'
+        again: 'Vous pourrez redemander un compte gérant à tout moment ; vos studios seront alors de nouveau accessibles.'

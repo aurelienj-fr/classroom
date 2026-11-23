@@ -55,6 +55,23 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
+    /**
+     * Platform administrators (recipients of owner request notifications).
+     *
+     * @return list<User>
+     */
+    public function findAdministrators(): array
+    {
+        /** @var list<User> */
+        return $this->createQueryBuilder('u')
+            // roles is a JSON array column: match the quoted role name.
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('role', '%"'.User::ROLE_ADMIN.'"%')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function countPendingOwnerRequests(): int
     {
         return $this->count(['ownerRequestStatus' => OwnerRequestStatus::Pending]);

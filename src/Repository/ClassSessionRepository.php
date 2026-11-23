@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\ClassSession;
 use App\Entity\Studio;
+use App\Entity\User;
 use App\Enum\BookingStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\LockMode;
@@ -49,6 +50,27 @@ class ClassSessionRepository extends ServiceEntityRepository
             ->andWhere('cs.startsAt >= :now')
             ->setParameter('now', $now)
             ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Upcoming, not cancelled sessions of all the studios owned by a user.
+     *
+     * @return list<ClassSession>
+     */
+    public function findUpcomingForOwner(User $owner, \DateTimeImmutable $now): array
+    {
+        /** @var list<ClassSession> */
+        return $this->createQueryBuilder('cs')
+            ->innerJoin('cs.activity', 'a')
+            ->innerJoin('a.studio', 's')
+            ->andWhere('s.owner = :owner')
+            ->andWhere('cs.cancelled = false')
+            ->andWhere('cs.startsAt > :now')
+            ->setParameter('owner', $owner)
+            ->setParameter('now', $now)
+            ->orderBy('cs.startsAt', 'ASC')
             ->getQuery()
             ->getResult();
     }

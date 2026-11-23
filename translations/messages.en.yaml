@@ -189,6 +189,9 @@ form:
         icon_help: 'Icon name without the "fa-" prefix (e.g. dumbbell, person-swimming).'
 
 flash:
+    owner_relinquish:
+        done: 'You are now a regular member. Studios unpublished: %studios%. Sessions cancelled: %sessions%.'
+        admin: 'Administrators keep their management rights.'
     owner_request:
         sent: 'Your studio owner request has been sent. An administrator will review it.'
         approved: "%name%'s owner account is approved."
@@ -231,6 +234,11 @@ booking:
 manage:
     my_studios: 'My studios'
     dashboard:
+        relinquish:
+            title: 'Go back to a regular member'
+            text: 'Your studios will be unpublished (kept as drafts) and your upcoming sessions cancelled: their members will be notified by e-mail.'
+            button: 'Stop being an owner'
+            confirm: 'Stop being an owner? Your studios will be unpublished and all your upcoming sessions cancelled.'
         empty_title: 'Create your first studio'
         empty_text: 'Enter your contact details and disciplines, then schedule your classes.'
         create_first: 'Create my studio'
@@ -301,3 +309,37 @@ error:
     generic:
         title: 'Error'
         text: 'Something went wrong. Please try again in a moment.'
+
+email:
+    greeting: 'Hello %name%,'
+    footer: 'This e-mail was sent by monStudio following an action on your account. Please do not reply.'
+    see_schedule: "See the studio's timetable"
+    booking_confirmed:
+        subject: 'Booking confirmed: %activity%'
+        intro: 'Your spot is booked for the following class:'
+        cancel_policy: 'You can cancel free of charge up to %hours% h before the class starts.'
+    booking_cancelled:
+        subject: 'Booking cancelled: %activity%'
+        intro: 'We confirm that your booking has been cancelled:'
+    session_cancelled:
+        subject: 'Class cancelled: %activity%'
+        intro: '%studio% had to cancel the following class:'
+        booking_cancelled: 'Your booking has been cancelled automatically. We are sorry for the inconvenience.'
+    owner_request_submitted:
+        subject: 'New studio owner request: %name%'
+        intro: '%name% (%email%) is asking for an owner account to publish their studio.'
+        review: 'Review the request'
+    owner_request_approved:
+        subject: 'Your owner account is approved'
+        intro: 'Good news: your studio owner request has been approved.'
+        next: 'Log in again to create your studio, classes and timetable.'
+    owner_request_rejected:
+        subject: 'Your owner account request was not approved'
+        intro: 'Your studio owner request has not been approved for now.'
+        next: 'You can request again from your "My bookings" page.'
+    owner_role_relinquished:
+        subject: 'You are now a regular member'
+        intro: 'Your owner account has been deactivated as you requested. You can still book classes.'
+        studios: '{0} No studio to unpublish.|{1} 1 studio was unpublished (kept as a draft).|]1,Inf[ %count% studios were unpublished (kept as drafts).'
+        sessions: '{0} No upcoming session to cancel.|{1} 1 upcoming session was cancelled; its members were notified.|]1,Inf[ %count% upcoming sessions were cancelled; their members were notified.'
+        again: 'You can ask for an owner account again at any time; your studios will then be available again.'
