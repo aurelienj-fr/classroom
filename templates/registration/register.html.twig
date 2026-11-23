@@ -10,6 +10,7 @@
                 <p class="text-center text-body-secondary mb-4">{{ 'registration.subtitle'|trans }}</p>
 
                 {{ form_start(form) }}
+                    {{ form_errors(form) }}
                     <div class="row g-3">
                         <div class="col-sm-6">{{ form_row(form.firstName) }}</div>
                         <div class="col-sm-6">{{ form_row(form.lastName) }}</div>

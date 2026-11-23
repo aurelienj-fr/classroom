@@ -32,9 +32,6 @@ class ClassSession
     #[Assert\NotNull]
     private \DateTimeImmutable $startsAt;
 
-    #[ORM\Column]
-    private \DateTimeImmutable $endsAt;
-
     #[ORM\Column(type: Types::SMALLINT)]
     #[Assert\Range(min: 1, max: 500)]
     private int $capacity;
@@ -59,7 +56,6 @@ class ClassSession
         $this->capacity = $activity->getDefaultCapacity();
         $this->bookings = new ArrayCollection();
         $this->startsAt = $startsAt;
-        $this->endsAt = $startsAt->modify(\sprintf('+%d minutes', $activity->getDurationMinutes()));
     }
 
     public function getId(): ?int
@@ -82,20 +78,19 @@ class ClassSession
         return $this->startsAt;
     }
 
-    /**
-     * Moves the session; the end time follows the activity duration.
-     */
     public function setStartsAt(\DateTimeImmutable $startsAt): static
     {
         $this->startsAt = $startsAt;
-        $this->endsAt = $startsAt->modify(\sprintf('+%d minutes', $this->activity->getDurationMinutes()));
 
         return $this;
     }
 
+    /**
+     * Computed from the activity duration, so that changing the duration updates every session.
+     */
     public function getEndsAt(): \DateTimeImmutable
     {
-        return $this->endsAt;
+        return $this->startsAt->modify(\sprintf('+%d minutes', $this->activity->getDurationMinutes()));
     }
 
     public function getCapacity(): int

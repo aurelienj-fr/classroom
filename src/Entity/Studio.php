@@ -9,7 +9,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Clock\Clock;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: StudioRepository::class)]
 #[ORM\UniqueConstraint(name: 'uniq_studio_slug', fields: ['slug'])]
@@ -92,7 +94,8 @@ class Studio implements \Stringable
     public function __construct(User $owner)
     {
         $this->owner = $owner;
-        $this->createdAt = new \DateTimeImmutable();
+        // Global clock: honours the mocked time in tests (ClockSensitiveTrait).
+        $this->createdAt = Clock::get()->now();
         $this->disciplines = new ArrayCollection();
         $this->activities = new ArrayCollection();
     }
@@ -277,5 +280,23 @@ class Studio implements \Stringable
     public function getActivities(): Collection
     {
         return $this->activities;
+    }
+
+    /**
+     * A discipline still used by one of the studio's activities cannot be removed.
+     */
+    #[Assert\Callback]
+    public function validateDisciplinesInUse(ExecutionContextInterface $context): void
+    {
+        foreach ($this->activities as $activity) {
+            $discipline = $activity->getDiscipline();
+            if (null !== $discipline && !$this->disciplines->contains($discipline)) {
+                $context->buildViolation('studio.disciplines.in_use')
+                    ->setParameter('{{ discipline }}', $discipline->getName())
+                    ->setParameter('{{ activity }}', $activity->getName())
+                    ->atPath('disciplines')
+                    ->addViolation();
+            }
+        }
     }
 }

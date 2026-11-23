@@ -42,7 +42,7 @@
         "bump-after-update": true,
         "sort-packages": true,
         "platform": {
-            "php": "8.4.1",
+            "php": "8.4.28",
             "ext-redis": false
         }
     },
@@ -108,6 +108,7 @@
         "phpstan/phpstan-doctrine": "*",
         "phpstan/phpstan-symfony": "*",
         "phpunit/phpunit": "^13.4",
+        "roave/security-advisories": "dev-latest",
         "symfony/browser-kit": "8.1.*",
         "symfony/css-selector": "8.1.*",
         "symfony/debug-bundle": "8.1.*",

@@ -11,6 +11,8 @@ enum BookingStatus: string implements TranslatableInterface
 {
     case Confirmed = 'confirmed';
     case Cancelled = 'cancelled';
+    /** The studio cancelled the session: the seat is released and the member is to be recredited. */
+    case CancelledByStudio = 'cancelled_by_studio';
 
     public function trans(TranslatorInterface $translator, ?string $locale = null): string
     {

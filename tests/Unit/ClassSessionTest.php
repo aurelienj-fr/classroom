@@ -25,6 +25,16 @@ final class ClassSessionTest extends TestCase
         self::assertEquals(new \DateTimeImmutable('2026-11-24 08:15'), $session->getEndsAt());
     }
 
+    public function testEndTimeFollowsLaterDurationChanges(): void
+    {
+        $activity = (new Activity(new Studio(new User())))->setDurationMinutes(60);
+        $session = new ClassSession($activity, new \DateTimeImmutable('2026-11-23 18:30'));
+
+        $activity->setDurationMinutes(90);
+
+        self::assertEquals(new \DateTimeImmutable('2026-11-23 20:00'), $session->getEndsAt());
+    }
+
     public function testConfirmedBookingsExcludeCancelledOnes(): void
     {
         $session = new ClassSession(new Activity(new Studio(new User())), new \DateTimeImmutable('2026-11-23 18:30'));

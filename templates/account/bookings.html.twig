@@ -28,7 +28,7 @@
                         {% if session.cancelled %}
                             <span class="badge text-bg-secondary">{{ 'account.session_cancelled'|trans }}</span>
                         {% elseif not booking.confirmed %}
-                            <span class="badge text-bg-light border">{{ 'account.booking_cancelled'|trans }}</span>
+                            <span class="badge text-bg-light border">{{ booking.status|trans }}</span>
                         {% else %}
                             <span class="badge text-bg-success">{{ booking.status|trans }}</span>
                             {% if cancellable[booking.id] ?? false %}

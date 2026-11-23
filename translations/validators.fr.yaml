@@ -18,6 +18,7 @@ studio:
         invalid: 'Code postal invalide (5 chiffres).'
     disciplines:
         required: 'Sélectionnez au moins une discipline.'
+        in_use: "La discipline « {{ discipline }} » est utilisée par le cours « {{ activity }} » : modifiez d'abord ce cours."
 activity:
     discipline:
         required: 'Choisissez une discipline.'
@@ -25,4 +26,3 @@ session:
     starts_at:
         required: "Indiquez la date et l'heure de début."
     must_start_in_future: 'La séance doit commencer dans le futur.'
-    capacity_below_bookings: '{1} 1 membre a déjà réservé : la capacité ne peut pas être inférieure.|]1,Inf[ %count% membres ont déjà réservé : la capacité ne peut pas être inférieure.'

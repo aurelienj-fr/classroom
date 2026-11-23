@@ -62,6 +62,11 @@ final class BookingException extends \DomainException
         return new self('booking.error.cancellation_deadline_passed', ['%hours%' => $hours]);
     }
 
+    public static function capacityBelowBookings(int $confirmedBookings): self
+    {
+        return new self('booking.error.capacity_below_bookings', ['%count%' => $confirmedBookings]);
+    }
+
     public static function sessionNotFound(): self
     {
         return new self('booking.error.session_not_found');

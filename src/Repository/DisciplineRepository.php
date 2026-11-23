@@ -26,4 +26,9 @@ class DisciplineRepository extends ServiceEntityRepository
         /** @var list<Discipline> */
         return $this->findBy([], ['name' => 'ASC']);
     }
+
+    public function slugExists(string $slug): bool
+    {
+        return $this->count(['slug' => $slug]) > 0;
+    }
 }

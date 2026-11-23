@@ -97,6 +97,20 @@ class Booking
         $this->checkedInAt = null;
     }
 
+    /**
+     * The studio cancelled the session (see BookingManager::cancelSession()).
+     */
+    public function cancelByStudio(\DateTimeImmutable $at): void
+    {
+        $this->status = BookingStatus::CancelledByStudio;
+        $this->cancelledAt = $at;
+        $this->checkedInAt = null;
+    }
+
+    /**
+     * Books again after a cancellation. "createdAt" becomes the new booking time on purpose:
+     * it orders attendee lists first-come, first-served.
+     */
     public function reactivate(\DateTimeImmutable $at): void
     {
         $this->status = BookingStatus::Confirmed;

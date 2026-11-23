@@ -8,6 +8,7 @@ use App\Entity\Discipline;
 use App\Entity\Studio;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -23,6 +24,9 @@ class StudioRepository extends ServiceEntityRepository
     /**
      * Published studios matching an optional city (prefix, case-insensitive) and discipline.
      *
+     * The disciplines are fetch-joined, so the limit is applied through a Paginator: a plain
+     * LIMIT would count SQL rows (one per studio and discipline) instead of studios.
+     *
      * @return list<Studio>
      */
     public function searchPublished(?string $city, ?Discipline $discipline, int $limit = 50): array
@@ -32,6 +36,7 @@ class StudioRepository extends ServiceEntityRepository
             ->leftJoin('s.disciplines', 'd')
             ->andWhere('s.published = true')
             ->orderBy('s.name', 'ASC')
+            ->addOrderBy('s.id', 'ASC')
             ->setMaxResults($limit);
 
         if (null !== $city && '' !== trim($city)) {
@@ -51,8 +56,10 @@ class StudioRepository extends ServiceEntityRepository
                 ->setParameter('discipline', $discipline);
         }
 
-        /** @var list<Studio> */
-        return $qb->getQuery()->getResult();
+        /** @var Paginator<Studio> $paginator */
+        $paginator = new Paginator($qb->getQuery(), fetchJoinCollection: true);
+
+        return array_values(iterator_to_array($paginator));
     }
 
     public function findOnePublishedBySlug(string $slug): ?Studio

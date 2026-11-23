@@ -34,6 +34,9 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 1209600 # 2 weeks
+                secure: auto # HTTPS-only cookie when the site is served over HTTPS
+                samesite: lax
+                httponly: true
             login_throttling:
                 max_attempts: 5
                 interval: '15 minutes'

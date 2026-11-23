@@ -9,6 +9,7 @@ use App\Entity\ClassSession;
 use App\Entity\User;
 use App\Enum\BookingStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -31,6 +32,27 @@ class BookingRepository extends ServiceEntityRepository
             ->setParameter('status', BookingStatus::Confirmed)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Confirmed bookings of a session with their members loaded (single query), first booked first.
+     *
+     * @return list<Booking>
+     */
+    public function findConfirmedForSession(ClassSession $session): array
+    {
+        /** @var list<Booking> */
+        return $this->createQueryBuilder('b')
+            ->addSelect('m')
+            ->innerJoin('b.member', 'm')
+            ->andWhere('b.session = :session')
+            ->andWhere('b.status = :status')
+            ->setParameter('session', $session)
+            ->setParameter('status', BookingStatus::Confirmed)
+            ->orderBy('b.createdAt', 'ASC')
+            ->addOrderBy('b.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     public function findOneForMemberAndSession(User $member, ClassSession $session): ?Booking
@@ -95,7 +117,7 @@ class BookingRepository extends ServiceEntityRepository
         return array_map('intval', $ids);
     }
 
-    private function createMemberQueryBuilder(User $member): \Doctrine\ORM\QueryBuilder
+    private function createMemberQueryBuilder(User $member): QueryBuilder
     {
         return $this->createQueryBuilder('b')
             ->addSelect('cs', 'a', 's')

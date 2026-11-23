@@ -22,8 +22,11 @@
             </p>
             {% if session.cancelled %}<span class="badge text-bg-secondary mt-2">{{ 'account.session_cancelled'|trans }}</span>{% endif %}
         </div>
+        {% if not started %}
         <div class="d-flex gap-2">
-            <a href="{{ path('app_manage_session_edit', {id: session.id}) }}" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1" aria-hidden="true"></i>{{ 'common.edit'|trans }}</a>
+            {% if not session.cancelled %}
+                <a href="{{ path('app_manage_session_edit', {id: session.id}) }}" class="btn btn-outline-primary"><i class="fa-solid fa-pen me-1" aria-hidden="true"></i>{{ 'common.edit'|trans }}</a>
+            {% endif %}
             <form method="post" action="{{ path('app_manage_session_toggle_cancel', {id: session.id}) }}" data-confirm="{{ session.cancelled ? 'manage.session.restore_confirm'|trans : 'manage.session.cancel_confirm'|trans }}">
                 <input type="hidden" name="_token" value="{{ csrf_token('toggle-session-' ~ session.id) }}">
                 {% if session.cancelled %}
@@ -33,7 +36,14 @@
                 {% endif %}
             </form>
         </div>
+        {% endif %}
     </div>
+
+    {% if session.cancelled %}
+        <div class="alert alert-secondary d-flex gap-2 align-items-center">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>{{ 'manage.session.cancelled_info'|trans }}
+        </div>
+    {% endif %}
 
     <div class="ms-card p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">

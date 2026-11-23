@@ -8,6 +8,7 @@ use App\Entity\Booking;
 use App\Entity\ClassSession;
 use App\Entity\Studio;
 use App\Entity\User;
+use App\Enum\BookingStatus;
 
 final class ManageTest extends WebTestCaseHelper
 {
@@ -141,5 +142,102 @@ final class ManageTest extends WebTestCaseHelper
         self::assertResponseRedirects('/fr/gestion/seances/'.$session->getId());
         $booking = $this->entityManager()->getRepository(Booking::class)->find($booking->getId());
         self::assertNotNull($booking?->getCheckedInAt());
+    }
+
+    public function testOwnerCancelsASessionAndItsBookings(): void
+    {
+        $owner = $this->data->user('owner@example.test', [User::ROLE_OWNER]);
+        $session = $this->data->session($this->data->studio($owner), new \DateTimeImmutable('2026-11-23 18:00'));
+        $booking = new Booking($this->data->user('member@example.test'), $session, new \DateTimeImmutable());
+        $this->entityManager()->persist($booking);
+        $this->entityManager()->flush();
+        $this->client->loginUser($owner);
+
+        $this->client->request('GET', '/fr/gestion/seances/'.$session->getId());
+        $this->client->submitForm('Annuler la séance');
+        $this->client->followRedirect();
+
+        self::assertSelectorTextContains('.alert-success', '1 réservation a été annulée');
+        self::assertSelectorExists('.alert-secondary');
+        self::assertSelectorNotExists('a[href$="/modifier"]', 'A cancelled session cannot be edited.');
+        $booking = $this->entityManager()->getRepository(Booking::class)->find($booking->getId());
+        self::assertSame(BookingStatus::CancelledByStudio, $booking?->getStatus());
+
+        // Check-in is refused on a cancelled session.
+        $this->client->request('GET', '/fr/gestion/seances/'.$session->getId().'/modifier');
+        self::assertResponseRedirects('/fr/gestion/seances/'.$session->getId());
+    }
+
+    public function testCheckInIsIgnoredOnACancelledSession(): void
+    {
+        $owner = $this->data->user('owner@example.test', [User::ROLE_OWNER]);
+        $session = $this->data->session($this->data->studio($owner), new \DateTimeImmutable('2026-11-23 18:00'));
+        $booking = new Booking($this->data->user('member@example.test'), $session, new \DateTimeImmutable());
+        $this->entityManager()->persist($booking);
+        $this->entityManager()->flush();
+        $this->client->loginUser($owner);
+
+        // Render the attendee list to get a valid token, then cancel the session behind it.
+        $crawler = $this->client->request('GET', '/fr/gestion/seances/'.$session->getId());
+        $checkIn = $crawler->selectButton('Pointer')->form();
+        $this->client->submitForm('Annuler la séance');
+        $this->client->submit($checkIn);
+
+        $booking = $this->entityManager()->getRepository(Booking::class)->find($booking->getId());
+        self::assertNull($booking?->getCheckedInAt());
+    }
+
+    public function testEditingASessionToThePastIsRejected(): void
+    {
+        $owner = $this->data->user('owner@example.test', [User::ROLE_OWNER]);
+        $session = $this->data->session($this->data->studio($owner), new \DateTimeImmutable('2026-11-23 18:00'));
+        $this->client->loginUser($owner);
+
+        $this->client->request('GET', '/fr/gestion/seances/'.$session->getId().'/modifier');
+        $this->client->submitForm('Enregistrer', ['class_session[startsAt]' => '2026-11-01T10:00']);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('.invalid-feedback', 'futur');
+    }
+
+    public function testStartedSessionsAreReadOnly(): void
+    {
+        $owner = $this->data->user('owner@example.test', [User::ROLE_OWNER]);
+        $session = $this->data->session($this->data->studio($owner), new \DateTimeImmutable('2026-11-22 09:00'));
+        $this->client->loginUser($owner);
+
+        $this->client->request('GET', '/fr/gestion/seances/'.$session->getId());
+        self::assertSelectorNotExists('form[action$="/annulation"]');
+
+        $this->client->request('GET', '/fr/gestion/seances/'.$session->getId().'/modifier');
+        self::assertResponseRedirects('/fr/gestion/seances/'.$session->getId());
+    }
+
+    public function testDisciplineUsedByAnActivityCannotBeRemovedFromTheStudio(): void
+    {
+        $owner = $this->data->user('owner@example.test', [User::ROLE_OWNER]);
+        $studio = $this->data->studio($owner);
+        $boxing = $this->data->discipline('Boxe');
+        $studio->addDiscipline($boxing);
+        $this->entityManager()->flush();
+        // TestData activities use the "Yoga" discipline.
+        $this->data->session($studio, new \DateTimeImmutable('2026-11-23 18:00'), name: 'Hatha yoga');
+        $this->client->loginUser($owner);
+
+        $crawler = $this->client->request('GET', '/fr/gestion/studios/'.$studio->getId().'/modifier');
+        $form = $crawler->selectButton('Enregistrer')->form();
+        $yogaId = (string) $this->data->discipline('Yoga')->getId();
+        /** @var list<\Symfony\Component\DomCrawler\Field\ChoiceFormField> $checkboxes */
+        $checkboxes = $form['studio[disciplines]'];
+        foreach ($checkboxes as $checkbox) {
+            // Untick "Yoga" only: an array value would be applied per checkbox position.
+            if ($checkbox->availableOptionValues() === [$yogaId]) {
+                $checkbox->untick();
+            }
+        }
+        $this->client->submit($form);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('.invalid-feedback', 'Hatha yoga');
     }
 }

@@ -1,0 +1,7 @@
+framework:
+    rate_limiter:
+        # Account creation: 5 attempts per IP address and per hour (spam / mass sign-ups).
+        registration:
+            policy: sliding_window
+            limit: 5
+            interval: '1 hour'

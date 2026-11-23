@@ -37,6 +37,7 @@ level:
 booking_status:
     confirmed: 'Confirmada'
     cancelled: 'Cancelada'
+    cancelled_by_studio: 'Cancelada por el estudio'
 
 search:
     city: 'Ciudad o código postal'
@@ -108,7 +109,6 @@ account:
     upcoming: 'Próximas'
     no_upcoming: 'No tienes ninguna reserva próxima.'
     session_cancelled: 'Clase cancelada'
-    booking_cancelled: 'Reserva cancelada'
     cancel: 'Cancelar'
     cancel_confirm: '¿Cancelar esta reserva?'
     history: 'Historial'
@@ -128,6 +128,7 @@ registration:
     submit: 'Crear mi cuenta'
     already: '¿Ya tienes cuenta?'
     login: 'Inicia sesión'
+    too_many_attempts: 'Demasiados intentos de registro desde tu conexión. Inténtalo de nuevo dentro de una hora.'
 
 form:
     choose: 'Elegir…'
@@ -189,7 +190,8 @@ flash:
     session:
         scheduled: '{1} 1 sesión programada.|]1,Inf[ %count% sesiones programadas.'
         updated: 'Sesión actualizada.'
-        cancelled: 'Sesión cancelada.'
+        cancelled: '{0} Sesión cancelada.|{1} Sesión cancelada: se ha cancelado 1 reserva.|]1,Inf[ Sesión cancelada: se han cancelado %count% reservas.'
+        not_editable: 'Una sesión empezada o cancelada ya no se puede modificar.'
         restored: 'Sesión restablecida.'
     discipline:
         created: 'Disciplina creada.'
@@ -205,6 +207,7 @@ booking:
         not_confirmed: 'Esta reserva ya está cancelada.'
         cancellation_deadline_passed: 'El plazo de cancelación ha vencido: se puede cancelar hasta %hours% h antes del inicio de la clase.'
         session_not_found: 'Clase no encontrada.'
+        capacity_below_bookings: '{1} 1 miembro ya ha reservado: la capacidad no puede ser inferior.|]1,Inf[ %count% miembros ya han reservado: la capacidad no puede ser inferior.'
 
 manage:
     my_studios: 'Mis estudios'
@@ -237,6 +240,7 @@ manage:
         restore: 'Restablecer'
         restore_confirm: '¿Restablecer esta sesión?'
         no_attendees: 'Todavía no hay inscritos.'
+        cancelled_info: 'Sesión cancelada: las reservas de los miembros se han cancelado. Si la restableces, tendrán que reservar de nuevo.'
         check_in: 'Marcar asistencia'
     col:
         date: 'Fecha'

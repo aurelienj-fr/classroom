@@ -12,15 +12,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[ORM\Entity(repositoryClass: DisciplineRepository::class)]
-#[ORM\UniqueConstraint(name: 'uniq_discipline_slug', fields: ['slug'])]
-#[ORM\UniqueConstraint(name: 'uniq_discipline_name', fields: ['name'])]
-#[UniqueEntity(fields: ['name'], message: 'discipline.name.already_exists')]
 /**
  * "name" is the French (default) name; other languages live in "nameTranslations".
  * Implements TranslatableInterface so that `{{ discipline|trans }}` and form choice labels
  * display the name in the current locale.
  */
+#[ORM\Entity(repositoryClass: DisciplineRepository::class)]
+#[ORM\UniqueConstraint(name: 'uniq_discipline_slug', fields: ['slug'])]
+#[ORM\UniqueConstraint(name: 'uniq_discipline_name', fields: ['name'])]
+#[UniqueEntity(fields: ['name'], message: 'discipline.name.already_exists')]
 class Discipline implements \Stringable, TranslatableInterface
 {
     public const string DEFAULT_LOCALE = 'fr';

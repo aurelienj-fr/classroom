@@ -18,6 +18,7 @@ studio:
         invalid: 'Invalid postcode (5 digits).'
     disciplines:
         required: 'Select at least one discipline.'
+        in_use: 'The discipline "{{ discipline }}" is used by the class "{{ activity }}": change that class first.'
 activity:
     discipline:
         required: 'Choose a discipline.'
@@ -25,4 +26,3 @@ session:
     starts_at:
         required: 'Enter the start date and time.'
     must_start_in_future: 'The session must start in the future.'
-    capacity_below_bookings: '{1} 1 member has already booked: the capacity cannot be lower.|]1,Inf[ %count% members have already booked: the capacity cannot be lower.'

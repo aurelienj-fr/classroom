@@ -37,6 +37,7 @@ level:
 booking_status:
     confirmed: 'Confirmée'
     cancelled: 'Annulée'
+    cancelled_by_studio: 'Annulée par le studio'
 
 search:
     city: 'Ville ou code postal'
@@ -108,7 +109,6 @@ account:
     upcoming: 'À venir'
     no_upcoming: "Vous n'avez aucune réservation à venir."
     session_cancelled: 'Séance annulée'
-    booking_cancelled: 'Réservation annulée'
     cancel: 'Annuler'
     cancel_confirm: 'Annuler cette réservation ?'
     history: 'Historique'
@@ -128,6 +128,7 @@ registration:
     submit: 'Créer mon compte'
     already: 'Déjà inscrit(e) ?'
     login: 'Connectez-vous'
+    too_many_attempts: "Trop de tentatives d'inscription depuis votre connexion. Réessayez dans une heure."
 
 form:
     choose: 'Choisir…'
@@ -189,7 +190,8 @@ flash:
     session:
         scheduled: '{1} 1 séance planifiée.|]1,Inf[ %count% séances planifiées.'
         updated: 'Séance mise à jour.'
-        cancelled: 'Séance annulée.'
+        cancelled: '{0} Séance annulée.|{1} Séance annulée : 1 réservation a été annulée.|]1,Inf[ Séance annulée : %count% réservations ont été annulées.'
+        not_editable: 'Une séance commencée ou annulée ne peut plus être modifiée.'
         restored: 'Séance rétablie.'
     discipline:
         created: 'Discipline créée.'
@@ -205,6 +207,7 @@ booking:
         not_confirmed: 'Cette réservation est déjà annulée.'
         cancellation_deadline_passed: "Le délai d'annulation est dépassé : annulation possible jusqu'à %hours% h avant le début de la séance."
         session_not_found: 'Séance introuvable.'
+        capacity_below_bookings: '{1} 1 membre a déjà réservé : la capacité ne peut pas être inférieure.|]1,Inf[ %count% membres ont déjà réservé : la capacité ne peut pas être inférieure.'
 
 manage:
     my_studios: 'Mes studios'
@@ -237,6 +240,7 @@ manage:
         restore: 'Rétablir'
         restore_confirm: 'Rétablir cette séance ?'
         no_attendees: 'Aucun inscrit pour le moment.'
+        cancelled_info: 'Séance annulée : les réservations des membres ont été annulées. Si vous la rétablissez, ils devront réserver à nouveau.'
         check_in: 'Pointer'
     col:
         date: 'Date'

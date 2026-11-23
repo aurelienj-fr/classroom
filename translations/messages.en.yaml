@@ -37,6 +37,7 @@ level:
 booking_status:
     confirmed: 'Confirmed'
     cancelled: 'Cancelled'
+    cancelled_by_studio: 'Cancelled by the studio'
 
 search:
     city: 'City or postcode'
@@ -108,7 +109,6 @@ account:
     upcoming: 'Upcoming'
     no_upcoming: "You don't have any upcoming bookings."
     session_cancelled: 'Class cancelled'
-    booking_cancelled: 'Booking cancelled'
     cancel: 'Cancel'
     cancel_confirm: 'Cancel this booking?'
     history: 'History'
@@ -128,6 +128,7 @@ registration:
     submit: 'Create my account'
     already: 'Already have an account?'
     login: 'Log in'
+    too_many_attempts: 'Too many sign-up attempts from your connection. Please try again in an hour.'
 
 form:
     choose: 'Choose…'
@@ -189,7 +190,8 @@ flash:
     session:
         scheduled: '{1} 1 session scheduled.|]1,Inf[ %count% sessions scheduled.'
         updated: 'Session updated.'
-        cancelled: 'Session cancelled.'
+        cancelled: '{0} Session cancelled.|{1} Session cancelled: 1 booking was cancelled.|]1,Inf[ Session cancelled: %count% bookings were cancelled.'
+        not_editable: 'A session that has started or been cancelled can no longer be edited.'
         restored: 'Session restored.'
     discipline:
         created: 'Discipline created.'
@@ -205,6 +207,7 @@ booking:
         not_confirmed: 'This booking is already cancelled.'
         cancellation_deadline_passed: 'The cancellation deadline has passed: bookings can be cancelled up to %hours% h before the class starts.'
         session_not_found: 'Class not found.'
+        capacity_below_bookings: '{1} 1 member has already booked: the capacity cannot be lower.|]1,Inf[ %count% members have already booked: the capacity cannot be lower.'
 
 manage:
     my_studios: 'My studios'
@@ -237,6 +240,7 @@ manage:
         restore: 'Restore'
         restore_confirm: 'Restore this session?'
         no_attendees: 'No bookings yet.'
+        cancelled_info: "Session cancelled: members' bookings were cancelled. If you restore it, they will have to book again."
         check_in: 'Check in'
     col:
         date: 'Date'

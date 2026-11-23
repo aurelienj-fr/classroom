@@ -22,6 +22,8 @@ abstract class WebTestCaseHelper extends WebTestCase
     {
         $this->client = static::createClient();
         static::mockTime('2026-11-22 10:00:00');
+        // Rate limiters (login throttling, registration) persist in the cache: start each test clean.
+        static::getContainer()->get('cache.rate_limiter')->clear();
 
         $container = static::getContainer();
         $this->data = new TestData(

@@ -41,12 +41,12 @@ Mot de passe commun : `monstudio-demo`
 - Fiche studio avec planning sur 7 jours glissants (navigation jusqu'à 12 semaines).
 - Fiche séance : places restantes, réservation, annulation.
 - Espace « Mes réservations » : séances à venir et historique (avec présence).
-- Inscription (membre ou gérant), connexion avec « rester connecté », limitation des tentatives (5 / 15 min).
+- Inscription (membre ou gérant, 5 tentatives par heure et par IP), connexion avec « rester connecté », limitation des tentatives (5 / 15 min).
 
 **Gérants (`ROLE_OWNER`)**
 - Création et édition de studios (brouillon / publié, délai d'annulation).
 - Cours (modèles : discipline, niveau, durée, capacité par défaut).
-- Séances : création unitaire ou répétée chaque semaine (jusqu'à 26 semaines), modification, annulation / rétablissement.
+- Séances : création unitaire ou répétée chaque semaine (jusqu'à 26 semaines), modification (séances à venir et non annulées uniquement), annulation / rétablissement.
 - Liste des inscrits et pointage des présences.
 
 **Administrateurs (`ROLE_ADMIN`)**
@@ -76,18 +76,35 @@ docker compose exec app php bin/console debug:translation en --only-missing
 Centralisées dans `App\Booking\BookingManager` :
 
 - Une séance est réservable si elle n'est ni annulée ni commencée, et si son studio est publié.
-- **Pas de surréservation** : la ligne de la séance est verrouillée (`SELECT … FOR UPDATE`) pendant le comptage et l'insertion.
+- **Pas de surréservation** : la ligne de la séance est verrouillée (`SELECT … FOR UPDATE`) pendant le comptage et l'insertion. Le même verrou protège la modification de capacité et l'annulation d'une séance. Un test à deux connexions réelles le vérifie (`BookingConcurrencyTest`).
 - Une seule réservation par membre et par séance (contrainte unique) ; réserver après une annulation réactive la réservation existante.
 - Annulation possible jusqu'à `cancellationDeadlineHours` heures avant le début (paramétrable par studio).
 - La capacité d'une séance ne peut pas descendre sous le nombre d'inscrits confirmés.
+- **Annulation par le studio** (`BookingManager::cancelSession()`) : toutes les réservations confirmées passent au statut `cancelled_by_studio` (place libérée, pointage impossible), puis l'événement `App\Booking\Event\SessionCancelledEvent` est diffusé avec ces réservations. **C'est le point d'accroche du recrédit des clients** : le MVP n'ayant pas encore de crédits ni de paiement, aucun écouteur n'est branché pour l'instant. Une séance rétablie est de nouveau réservable, mais les réservations annulées le restent (les membres réservent à nouveau).
+- Une séance commencée ou annulée n'est plus modifiable ; une séance ne peut pas être déplacée dans le passé.
+- L'heure de fin est calculée à partir de la durée du cours : modifier la durée met à jour toutes les séances.
+- Heures stockées en heure locale `Europe/Paris` (fixée par `App\Kernel`, indépendamment de `php.ini`).
 
 ## Sécurité
 
 - Contrôle d'accès par rôles (`access_control`) et voters (`StudioVoter`, `BookingVoter`).
 - CSRF sur tous les formulaires et actions POST (jetons de session), ainsi que sur la déconnexion.
 - Mots de passe hachés (`auto`), 12 caractères minimum, refus des mots de passe compromis (Have I Been Pwned).
-- Redirection après connexion limitée au même domaine (assurée par Symfony ; `SafeLoginRedirectListener` est une seconde barrière redondante).
+- Redirection après connexion limitée au même domaine (assurée par Symfony via `HttpUtils` ; `SafeLoginRedirectListener` est une seconde barrière).
+- En-têtes HTTP de sécurité (`SecurityHeadersListener`) : `X-Frame-Options`, `frame-ancestors`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`. Pas de CSP complète : l'importmap d'AssetMapper utilise des scripts inline (nonces à prévoir).
+- Cookies de session et « rester connecté » : `HttpOnly`, `SameSite=Lax`, `Secure` automatique en HTTPS.
+- `roave/security-advisories` empêche l'installation de dépendances vulnérables connues ; `composer audit` en complément.
 - Requêtes Doctrine paramétrées ; échappement Twig par défaut.
+
+## Mise en production
+
+L'image Docker fournie est une image de **développement**. En production :
+
+- `APP_ENV=prod` et `APP_DEBUG=0` (sinon profiler et traces d'erreur exposés) ;
+- un `APP_SECRET` aléatoire et privé (`php bin/console secrets:set APP_SECRET` ou variable d'environnement) : il signe notamment les cookies « rester connecté ». Ne jamais réutiliser celui de `.env.dev` ;
+- HTTPS obligatoire (les cookies passent alors en `Secure`) ;
+- un stockage de cache partagé (Redis…) si plusieurs serveurs, pour les limiteurs de tentatives ;
+- l'extension PHP `intl` recommandée.
 
 ## Qualité
 
@@ -126,5 +143,7 @@ tests/
 - **Paiement** : hors périmètre du MVP (abonnements, carnets, Stripe…).
 - **E-mails** : pas encore de confirmation de réservation ni de vérification d'adresse (`symfony/mailer` + `symfonycasts/verify-email-bundle`).
 - **Liste d'attente** sur les séances complètes.
-- **Symfony 8.1** n'est pas une LTS (fin de maintenance en janvier 2027) : prévoir la montée en 8.2.
+- **Symfony 8.1** n'est pas une LTS (fin de maintenance en janvier 2027) : montée en 8.2 prévue dès la sortie de la version stable.
+- **Recrédit des clients** : à brancher sur `SessionCancelledEvent` quand les crédits / carnets existeront.
+- **Inscription comme gérant** libre (pas de validation par un administrateur) : choix produit à confirmer.
 - L'extension PHP `intl` n'est pas requise ; l'ajouter en production reste recommandé.
