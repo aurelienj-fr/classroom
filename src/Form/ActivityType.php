@@ -27,31 +27,31 @@ final class ActivityType extends AbstractType
         $activity = $builder->getData();
 
         $builder
-            ->add('name', TextType::class, ['label' => 'Nom du cours', 'empty_data' => ''])
+            ->add('name', TextType::class, ['label' => 'form.activity.name', 'empty_data' => ''])
             ->add('discipline', EntityType::class, [
-                'label' => 'Discipline',
+                'label' => 'form.activity.discipline',
                 'class' => Discipline::class,
-                'choice_label' => 'name',
+                'choice_label' => static fn (Discipline $discipline): Discipline => $discipline,
                 'choices' => $activity->getStudio()->getDisciplines(),
-                'placeholder' => 'Choisir…',
+                'placeholder' => 'form.choose',
             ])
             ->add('level', EnumType::class, [
-                'label' => 'Niveau',
+                'label' => 'form.activity.level',
                 'class' => Level::class,
-                'choice_label' => static fn (Level $level): string => $level->label(),
+                'choice_label' => static fn (Level $level): Level => $level,
             ])
             ->add('durationMinutes', IntegerType::class, [
-                'label' => 'Durée (minutes)',
+                'label' => 'form.activity.duration',
                 'empty_data' => '0',
                 'attr' => ['min' => 15, 'max' => 480, 'step' => 5],
             ])
             ->add('defaultCapacity', IntegerType::class, [
-                'label' => 'Places par séance (par défaut)',
+                'label' => 'form.activity.capacity',
                 'empty_data' => '0',
                 'attr' => ['min' => 1, 'max' => 500],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Description',
+                'label' => 'form.activity.description',
                 'required' => false,
                 'attr' => ['rows' => 4],
             ]);

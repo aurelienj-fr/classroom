@@ -50,7 +50,7 @@ class ClassSession
      * @var Collection<int, Booking>
      */
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'session', orphanRemoval: true)]
-    #[ORM\OrderBy(['createdAt' => 'ASC'])]
+    #[ORM\OrderBy(['createdAt' => \SortDirection::Ascending])]
     private Collection $bookings;
 
     public function __construct(Activity $activity, \DateTimeImmutable $startsAt)

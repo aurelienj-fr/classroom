@@ -1,0 +1,28 @@
+user:
+    email:
+        already_used: 'An account already exists with this email address.'
+    password:
+        blank: 'Please choose a password.'
+        too_short: 'The password must be at least {{ limit }} characters long.'
+        compromised: 'This password appeared in a known data breach, please choose another one.'
+        mismatch: 'The passwords do not match.'
+    terms:
+        required: 'You must accept the terms of use.'
+discipline:
+    name:
+        already_exists: 'This discipline already exists.'
+    icon:
+        invalid: 'Invalid Font Awesome icon name (e.g. dumbbell).'
+studio:
+    postal_code:
+        invalid: 'Invalid postcode (5 digits).'
+    disciplines:
+        required: 'Select at least one discipline.'
+activity:
+    discipline:
+        required: 'Choose a discipline.'
+session:
+    starts_at:
+        required: 'Enter the start date and time.'
+    must_start_in_future: 'The session must start in the future.'
+    capacity_below_bookings: '{1} 1 member has already booked: the capacity cannot be lower.|]1,Inf[ %count% members have already booked: the capacity cannot be lower.'

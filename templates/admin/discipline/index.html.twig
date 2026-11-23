@@ -1,20 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Disciplines{% endblock %}
+{% block title %}{{ 'admin.discipline.title'|trans }}{% endblock %}
 
 {% block body %}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 mb-0">Disciplines</h1>
-        <a href="{{ path('app_admin_discipline_new') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i>Nouvelle discipline</a>
+        <h1 class="h2 mb-0">{{ 'admin.discipline.title'|trans }}</h1>
+        <a href="{{ path('app_admin_discipline_new') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i>{{ 'admin.discipline.new'|trans }}</a>
     </div>
     <div class="ms-card overflow-hidden">
         <table class="table align-middle mb-0">
             <thead>
                 <tr class="small text-body-secondary">
-                    <th scope="col" class="ps-4">Icône</th>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Slug</th>
-                    <th scope="col"><span class="visually-hidden">Actions</span></th>
+                    <th scope="col" class="ps-4">{{ 'admin.discipline.col_icon'|trans }}</th>
+                    <th scope="col">{{ 'form.discipline.name'|trans }}</th>
+                    <th scope="col">{{ 'admin.discipline.col_translations'|trans }}</th>
+                    <th scope="col">{{ 'admin.discipline.col_slug'|trans }}</th>
+                    <th scope="col"><span class="visually-hidden">{{ 'common.actions'|trans }}</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -22,11 +23,12 @@
                     <tr>
                         <td class="ps-4"><i class="fa-solid fa-{{ discipline.icon }} text-primary" aria-hidden="true"></i></td>
                         <td>{{ discipline.name }}</td>
+                        <td class="small text-body-secondary">{% for locale, name in discipline.nameTranslations %}<span class="badge text-bg-light border me-1">{{ locale|upper }}</span>{{ name }}{{ not loop.last ? ' · ' }}{% else %}—{% endfor %}</td>
                         <td><code>{{ discipline.slug }}</code></td>
-                        <td class="text-end pe-4"><a href="{{ path('app_admin_discipline_edit', {id: discipline.id}) }}" class="btn btn-sm btn-light border">Modifier</a></td>
+                        <td class="text-end pe-4"><a href="{{ path('app_admin_discipline_edit', {id: discipline.id}) }}" class="btn btn-sm btn-light border">{{ 'common.edit'|trans }}</a></td>
                     </tr>
                 {% else %}
-                    <tr><td colspan="4" class="text-center text-body-secondary py-4">Aucune discipline.</td></tr>
+                    <tr><td colspan="5" class="text-center text-body-secondary py-4">{{ 'admin.discipline.empty'|trans }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>

@@ -11,7 +11,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 final class SecurityController extends AbstractController
 {
-    #[Route('/connexion', name: 'app_login', methods: ['GET', 'POST'])]
+    #[Route(['fr' => '/connexion', 'en' => '/login', 'es' => '/acceso'], name: 'app_login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if (null !== $this->getUser()) {
@@ -24,7 +24,7 @@ final class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route('/deconnexion', name: 'app_logout', methods: ['GET'])]
+    #[Route(['fr' => '/deconnexion', 'en' => '/logout', 'es' => '/salir'], name: 'app_logout', methods: ['GET'])]
     public function logout(): never
     {
         throw new \LogicException('This method is intercepted by the logout key on the firewall.');

@@ -22,7 +22,7 @@ docker compose exec app php bin/console doctrine:migrations:migrate -n
 docker compose exec app php bin/console doctrine:fixtures:load -n
 ```
 
-Application : <http://localhost:8080>
+Application : <http://localhost:8080> (redirige vers `/fr`, `/en` ou `/es` selon la langue du navigateur)
 
 ### Comptes de démonstration
 
@@ -53,6 +53,24 @@ Mot de passe commun : `monstudio-demo`
 - Gestion des disciplines (nom, icône Font Awesome).
 - Accès à la gestion de tous les studios.
 
+## Multilingue (FR, EN, ES)
+
+- **URL préfixées et traduites** : `/fr/seances/12`, `/en/classes/12`, `/es/clases/12`. Les chemins sont déclarés par langue dans les `#[Route]` ; le préfixe est ajouté dans `config/routes.yaml`.
+- **`/` redirige** vers la langue préférée du navigateur (`Accept-Language`), le français par défaut.
+- **Sélecteur de langue** dans la barre de navigation (reste sur la page courante) et balises `hreflang` sur chaque page.
+- **Traductions** dans `translations/` : `messages.{fr,en,es}.yaml` (interface, messages flash, erreurs métier) et `validators.{fr,en,es}.yaml` (validation). Les messages de Symfony (validation standard, sécurité) sont fournis par le framework.
+- **Dates** formatées par le filtre Twig `local_date` (`App\Twig\LocalizedDateExtension`), sans dépendre de l'extension `intl`.
+- **Disciplines** : nom français + traductions EN/ES saisies par l'administrateur (repli sur le français).
+- **Contenus des gérants** (présentation du studio, nom et description des cours) : non traduits, affichés dans la langue de saisie.
+
+Ajouter une langue : l'ajouter à `framework.enabled_locales` (`config/packages/translation.yaml`), au préfixe de `config/routes.yaml`, aux chemins des `#[Route]` et à `access_control`, puis créer ses fichiers de traduction et ses formats de date.
+
+Vérifier les traductions manquantes :
+
+```bash
+docker compose exec app php bin/console debug:translation en --only-missing
+```
+
 ## Règles métier
 
 Centralisées dans `App\Booking\BookingManager` :
@@ -68,7 +86,7 @@ Centralisées dans `App\Booking\BookingManager` :
 - Contrôle d'accès par rôles (`access_control`) et voters (`StudioVoter`, `BookingVoter`).
 - CSRF sur tous les formulaires et actions POST (jetons de session), ainsi que sur la déconnexion.
 - Mots de passe hachés (`auto`), 12 caractères minimum, refus des mots de passe compromis (Have I Been Pwned).
-- Redirection après connexion limitée au même hôte (`SafeLoginRedirectListener`).
+- Redirection après connexion limitée au même domaine (assurée par Symfony ; `SafeLoginRedirectListener` est une seconde barrière redondante).
 - Requêtes Doctrine paramétrées ; échappement Twig par défaut.
 
 ## Qualité

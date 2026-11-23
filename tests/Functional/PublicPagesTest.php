@@ -14,7 +14,7 @@ final class PublicPagesTest extends WebTestCaseHelper
         $studio = $this->data->studio($this->data->user('owner@example.test', [User::ROLE_OWNER]), 'Atelier Soleil');
         $this->data->session($studio, new \DateTimeImmutable('2026-11-23 18:30'), name: 'Yin yoga');
 
-        $this->client->request('GET', '/');
+        $this->client->request('GET', '/fr');
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Votre prochain cours');
@@ -28,7 +28,7 @@ final class PublicPagesTest extends WebTestCaseHelper
         $this->data->studio($owner, 'Studio Parisien', 'Paris');
         $this->data->studio($owner, 'Studio Caché', 'Lyon', published: false);
 
-        $crawler = $this->client->request('GET', '/studios?ville=lyo');
+        $crawler = $this->client->request('GET', '/fr/studios?ville=lyo');
 
         self::assertResponseIsSuccessful();
         $names = $crawler->filter('h2.h5')->each(static fn ($node): string => $node->text());
@@ -40,7 +40,7 @@ final class PublicPagesTest extends WebTestCaseHelper
         $studio = $this->data->studio($this->data->user('owner@example.test', [User::ROLE_OWNER]), 'Atelier Soleil', 'Nantes');
         $this->data->session($studio, new \DateTimeImmutable('2026-11-24 12:30'), name: 'Pilates');
 
-        $this->client->request('GET', '/studios/'.$studio->getSlug());
+        $this->client->request('GET', '/fr/studios/'.$studio->getSlug());
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Atelier Soleil');
@@ -52,14 +52,14 @@ final class PublicPagesTest extends WebTestCaseHelper
     {
         $studio = $this->data->studio($this->data->user('owner@example.test', [User::ROLE_OWNER]), published: false);
 
-        $this->client->request('GET', '/studios/'.$studio->getSlug());
+        $this->client->request('GET', '/fr/studios/'.$studio->getSlug());
 
         self::assertResponseStatusCodeSame(404);
     }
 
     public function testRegistrationCreatesAnOwnerAccountAndLogsIn(): void
     {
-        $this->client->request('GET', '/inscription');
+        $this->client->request('GET', '/fr/inscription');
         $this->client->submitForm('Créer mon compte', [
             'registration_form[firstName]' => 'Zoé',
             'registration_form[lastName]' => 'Lambert',
@@ -70,7 +70,7 @@ final class PublicPagesTest extends WebTestCaseHelper
             'registration_form[agreeTerms]' => true,
         ]);
 
-        self::assertResponseRedirects('/gestion');
+        self::assertResponseRedirects('/fr/gestion');
         $user = $this->entityManager()->getRepository(User::class)->findOneBy(['email' => 'zoe@example.test']);
         self::assertNotNull($user);
         self::assertContains(User::ROLE_OWNER, $user->getRoles());
@@ -82,7 +82,7 @@ final class PublicPagesTest extends WebTestCaseHelper
 
     public function testRegistrationRejectsShortPasswords(): void
     {
-        $this->client->request('GET', '/inscription');
+        $this->client->request('GET', '/fr/inscription');
         $this->client->submitForm('Créer mon compte', [
             'registration_form[firstName]' => 'Zoé',
             'registration_form[lastName]' => 'Lambert',
@@ -100,13 +100,13 @@ final class PublicPagesTest extends WebTestCaseHelper
     {
         $this->data->user('member@example.test');
 
-        $this->client->request('GET', '/connexion');
+        $this->client->request('GET', '/fr/connexion');
         $this->client->submitForm('Se connecter', [
             '_username' => 'member@example.test',
             '_password' => TestData::PASSWORD,
         ]);
 
-        self::assertResponseRedirects('/');
+        self::assertResponseRedirects('/fr');
         $this->client->followRedirect();
         self::assertSelectorTextContains('nav', 'Mes réservations');
     }
@@ -115,20 +115,21 @@ final class PublicPagesTest extends WebTestCaseHelper
     {
         $this->data->user('member@example.test');
 
-        $this->client->request('POST', '/connexion', [
+        $this->client->request('POST', '/fr/connexion', [
             '_username' => 'member@example.test',
             '_password' => TestData::PASSWORD,
             '_csrf_token' => $this->csrfToken('authenticate'),
             '_target_path' => 'https://evil.example/phishing',
         ]);
 
+        // Symfony restricts post-login redirects to the session domain and falls back to "/".
         self::assertResponseRedirects('/');
     }
 
     private function csrfToken(string $id): string
     {
         // Render the login page first so the token is stored in the test session.
-        $crawler = $this->client->request('GET', '/connexion');
+        $crawler = $this->client->request('GET', '/fr/connexion');
 
         return (string) $crawler->filter('input[name="_csrf_token"]')->attr('value');
     }

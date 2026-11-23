@@ -1,0 +1,28 @@
+user:
+    email:
+        already_used: 'Ya existe una cuenta con este correo electrónico.'
+    password:
+        blank: 'Elige una contraseña.'
+        too_short: 'La contraseña debe tener al menos {{ limit }} caracteres.'
+        compromised: 'Esta contraseña aparece en una filtración de datos conocida, elige otra.'
+        mismatch: 'Las contraseñas no coinciden.'
+    terms:
+        required: 'Debes aceptar las condiciones de uso.'
+discipline:
+    name:
+        already_exists: 'Esta disciplina ya existe.'
+    icon:
+        invalid: 'Nombre de icono de Font Awesome no válido (p. ej.: dumbbell).'
+studio:
+    postal_code:
+        invalid: 'Código postal no válido (5 cifras).'
+    disciplines:
+        required: 'Selecciona al menos una disciplina.'
+activity:
+    discipline:
+        required: 'Elige una disciplina.'
+session:
+    starts_at:
+        required: 'Indica la fecha y la hora de inicio.'
+    must_start_in_future: 'La sesión debe empezar en el futuro.'
+    capacity_below_bookings: '{1} 1 miembro ya ha reservado: la capacidad no puede ser inferior.|]1,Inf[ %count% miembros ya han reservado: la capacidad no puede ser inferior.'

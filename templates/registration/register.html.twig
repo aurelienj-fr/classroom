@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer un compte{% endblock %}
+{% block title %}{{ 'nav.register'|trans }}{% endblock %}
 
 {% block body %}
     <div class="row justify-content-center">
         <div class="col-md-9 col-lg-6">
             <div class="ms-card p-4 p-lg-5">
-                <h1 class="h3 mb-1 text-center">Créer votre compte</h1>
-                <p class="text-center text-body-secondary mb-4">Réservez vos cours ou publiez le planning de votre studio.</p>
+                <h1 class="h3 mb-1 text-center">{{ 'registration.heading'|trans }}</h1>
+                <p class="text-center text-body-secondary mb-4">{{ 'registration.subtitle'|trans }}</p>
 
                 {{ form_start(form) }}
                     <div class="row g-3">
@@ -21,10 +21,10 @@
                         {{ form_row(form.studioOwner, {row_attr: {class: 'mb-0'}}) }}
                     </div>
                     {{ form_row(form.agreeTerms) }}
-                    <button type="submit" class="btn btn-primary btn-lg w-100">Créer mon compte</button>
+                    <button type="submit" class="btn btn-primary btn-lg w-100">{{ 'registration.submit'|trans }}</button>
                 {{ form_end(form) }}
 
-                <p class="text-center small text-body-secondary mt-4 mb-0">Déjà inscrit(e) ? <a href="{{ path('app_login') }}">Connectez-vous</a></p>
+                <p class="text-center small text-body-secondary mt-4 mb-0">{{ 'registration.already'|trans }} <a href="{{ path('app_login') }}">{{ 'registration.login'|trans }}</a></p>
             </div>
         </div>
     </div>

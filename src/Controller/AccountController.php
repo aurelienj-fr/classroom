@@ -19,12 +19,13 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
 
-#[Route('/compte')]
+#[Route(['fr' => '/compte', 'en' => '/account', 'es' => '/cuenta'])]
 #[IsGranted('ROLE_USER')]
 final class AccountController extends AbstractController
 {
-    #[Route('/reservations', name: 'app_account_bookings', methods: ['GET'])]
+    #[Route(['fr' => '/reservations', 'en' => '/bookings', 'es' => '/reservas'], name: 'app_account_bookings', methods: ['GET'])]
     public function bookings(
         BookingRepository $bookingRepository,
         BookingManager $bookingManager,
@@ -46,16 +47,16 @@ final class AccountController extends AbstractController
         ]);
     }
 
-    #[Route('/reservations/{id}/annuler', name: 'app_account_booking_cancel', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route(['fr' => '/reservations/{id}/annuler', 'en' => '/bookings/{id}/cancel', 'es' => '/reservas/{id}/cancelar'], name: 'app_account_booking_cancel', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted(BookingVoter::CANCEL, subject: 'booking')]
     #[IsCsrfTokenValid(new Expression('"cancel-booking-" ~ args["booking"].getId()'))]
     public function cancel(Booking $booking, BookingManager $bookingManager, Request $request): Response
     {
         try {
             $bookingManager->cancel($booking);
-            $this->addFlash('success', 'Votre réservation a été annulée.');
+            $this->addFlash('success', new TranslatableMessage('flash.booking.cancelled'));
         } catch (BookingException $exception) {
-            $this->addFlash('danger', $exception->getMessage());
+            $this->addFlash('danger', $exception->getTranslatable());
         }
 
         return 'session' === $request->getPayload()->getString('from')

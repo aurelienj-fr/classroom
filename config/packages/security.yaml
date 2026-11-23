@@ -39,10 +39,11 @@ security:
                 interval: '15 minutes'
 
     # Note: Only the *first* matching rule is applied
+    # Paths are localized (see config/routes.yaml); controllers also carry #[IsGranted].
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/gestion, roles: ROLE_OWNER }
-        - { path: ^/compte, roles: ROLE_USER }
+        - { path: ^/(fr|en|es)/admin(/|$), roles: ROLE_ADMIN }
+        - { path: ^/(fr/gestion|en/manage|es/gestion)(/|$), roles: ROLE_OWNER }
+        - { path: ^/(fr/compte|en/account|es/cuenta)(/|$), roles: ROLE_USER }
 
 when@test:
     security:

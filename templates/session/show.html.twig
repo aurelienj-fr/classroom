@@ -5,12 +5,12 @@
 {% set studio = session.studio %}
 {% set left = session.capacity - bookedCount %}
 
-{% block title %}{{ activity.name }} — {{ session.startsAt|fr_date('day') }} — {{ studio.name }}{% endblock %}
+{% block title %}{{ activity.name }} — {{ session.startsAt|local_date('day') }} — {{ studio.name }}{% endblock %}
 
 {% block body %}
-    <nav aria-label="Fil d'Ariane" class="mb-3">
+    <nav aria-label="{{ 'common.breadcrumb'|trans }}" class="mb-3">
         <ol class="breadcrumb small">
-            <li class="breadcrumb-item"><a href="{{ path('app_studio_index') }}">Studios</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_studio_index') }}">{{ 'footer.studios'|trans }}</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_studio_show', {slug: studio.slug}) }}">{{ studio.name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ activity.name }}</li>
         </ol>
@@ -24,7 +24,7 @@
                     <div>
                         <h1 class="h3 mb-1">{{ activity.name }}</h1>
                         <div class="d-flex flex-wrap gap-2 align-items-center">
-                            <span class="badge rounded-pill bg-primary-subtle text-primary fw-medium">{{ activity.discipline.name }}</span>
+                            <span class="badge rounded-pill bg-primary-subtle text-primary fw-medium">{{ activity.discipline|trans }}</span>
                             {{ ui.level(activity.level) }}
                         </div>
                     </div>
@@ -33,45 +33,45 @@
                     <p class="text-body-secondary">{{ activity.description|nl2br }}</p>
                 {% endif %}
                 <ul class="list-unstyled d-grid gap-2 mb-0">
-                    <li><i class="fa-regular fa-calendar text-primary me-2" aria-hidden="true"></i>{{ session.startsAt|fr_date('day')|capitalize }}, de {{ session.startsAt|fr_date('time') }} à {{ session.endsAt|fr_date('time') }}</li>
-                    {% if session.instructorName %}<li><i class="fa-solid fa-user-tie text-primary me-2" aria-hidden="true"></i>Avec {{ session.instructorName }}</li>{% endif %}
+                    <li><i class="fa-regular fa-calendar text-primary me-2" aria-hidden="true"></i>{{ 'session.show.when'|trans({'%day%': session.startsAt|local_date('day')|u.title, '%start%': session.startsAt|local_date('time'), '%end%': session.endsAt|local_date('time')}) }}</li>
+                    {% if session.instructorName %}<li><i class="fa-solid fa-user-tie text-primary me-2" aria-hidden="true"></i>{{ 'session.show.with'|trans({'%name%': session.instructorName}) }}</li>{% endif %}
                     <li><i class="fa-solid fa-location-dot text-primary me-2" aria-hidden="true"></i><a href="{{ path('app_studio_show', {slug: studio.slug}) }}">{{ studio.name }}</a> — {{ studio.fullAddress }}</li>
-                    <li><i class="fa-solid fa-users text-primary me-2" aria-hidden="true"></i>{{ bookedCount }} / {{ session.capacity }} inscrits</li>
+                    <li><i class="fa-solid fa-users text-primary me-2" aria-hidden="true"></i>{{ 'session.show.registered'|trans({'%booked%': bookedCount, '%capacity%': session.capacity}) }}</li>
                 </ul>
             </div>
         </div>
 
         <div class="col-lg-5">
             <div class="ms-card p-4">
-                <h2 class="h5 mb-3">Réservation</h2>
+                <h2 class="h5 mb-3">{{ 'session.show.booking'|trans }}</h2>
                 {% if booking and booking.confirmed %}
-                    <div class="alert alert-success d-flex gap-2 align-items-center"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Vous êtes inscrit(e) à cette séance.</div>
+                    <div class="alert alert-success d-flex gap-2 align-items-center"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>{{ 'session.show.you_are_booked'|trans }}</div>
                     {% if canCancel %}
-                        <form method="post" action="{{ path('app_account_booking_cancel', {id: booking.id}) }}" data-confirm="Annuler votre réservation ?">
+                        <form method="post" action="{{ path('app_account_booking_cancel', {id: booking.id}) }}" data-confirm="{{ 'session.show.cancel_confirm'|trans }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('cancel-booking-' ~ booking.id) }}">
                             <input type="hidden" name="from" value="session">
-                            <button type="submit" class="btn btn-outline-danger w-100"><i class="fa-solid fa-xmark me-1" aria-hidden="true"></i>Annuler ma réservation</button>
+                            <button type="submit" class="btn btn-outline-danger w-100"><i class="fa-solid fa-xmark me-1" aria-hidden="true"></i>{{ 'session.show.cancel'|trans }}</button>
                         </form>
-                        <p class="small text-body-secondary mt-2 mb-0">Annulation possible jusqu'à {{ studio.cancellationDeadlineHours }} h avant le début.</p>
+                        <p class="small text-body-secondary mt-2 mb-0">{{ 'session.show.cancel_until'|trans({'%hours%': studio.cancellationDeadlineHours}) }}</p>
                     {% else %}
-                        <p class="small text-body-secondary mb-0">Le délai d'annulation ({{ studio.cancellationDeadlineHours }} h) est dépassé.</p>
+                        <p class="small text-body-secondary mb-0">{{ 'session.show.deadline_passed'|trans({'%hours%': studio.cancellationDeadlineHours}) }}</p>
                     {% endif %}
                 {% elseif session.cancelled %}
-                    <div class="alert alert-secondary mb-0"><i class="fa-solid fa-ban me-1" aria-hidden="true"></i>Cette séance a été annulée par le studio.</div>
+                    <div class="alert alert-secondary mb-0"><i class="fa-solid fa-ban me-1" aria-hidden="true"></i>{{ 'session.show.cancelled_by_studio'|trans }}</div>
                 {% elseif session.startsAt <= now %}
-                    <div class="alert alert-light border mb-0">Cette séance est terminée.</div>
+                    <div class="alert alert-light border mb-0">{{ 'session.show.finished'|trans }}</div>
                 {% elseif left <= 0 %}
-                    <div class="alert alert-danger mb-0"><i class="fa-solid fa-circle-exclamation me-1" aria-hidden="true"></i>Séance complète.</div>
+                    <div class="alert alert-danger mb-0"><i class="fa-solid fa-circle-exclamation me-1" aria-hidden="true"></i>{{ 'session.show.full'|trans }}</div>
                 {% else %}
                     <p class="mb-3">{{ ui.spots(session, bookedCount, now) }}</p>
                     {% if is_granted('ROLE_USER') %}
                         <form method="post" action="{{ path('app_session_book', {id: session.id}) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('book-session-' ~ session.id) }}">
-                            <button type="submit" class="btn btn-accent btn-lg w-100"><i class="fa-solid fa-calendar-plus me-2" aria-hidden="true"></i>Réserver ma place</button>
+                            <button type="submit" class="btn btn-accent btn-lg w-100"><i class="fa-solid fa-calendar-plus me-2" aria-hidden="true"></i>{{ 'session.show.book'|trans }}</button>
                         </form>
                     {% else %}
-                        <a href="{{ path('app_login', {_target_path: path('app_session_show', {id: session.id})}) }}" class="btn btn-accent btn-lg w-100">Se connecter pour réserver</a>
-                        <p class="small text-center text-body-secondary mt-2 mb-0">Pas encore de compte ? <a href="{{ path('app_register') }}">Inscrivez-vous</a></p>
+                        <a href="{{ path('app_login', {_target_path: path('app_session_show', {id: session.id})}) }}" class="btn btn-accent btn-lg w-100">{{ 'session.show.login_to_book'|trans }}</a>
+                        <p class="small text-center text-body-secondary mt-2 mb-0">{{ 'session.show.no_account'|trans }} <a href="{{ path('app_register') }}">{{ 'session.show.register'|trans }}</a></p>
                     {% endif %}
                 {% endif %}
             </div>

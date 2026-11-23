@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Enum;
 
-enum BookingStatus: string
+use Symfony\Contracts\Translation\TranslatableInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+enum BookingStatus: string implements TranslatableInterface
 {
     case Confirmed = 'confirmed';
     case Cancelled = 'cancelled';
 
-    public function label(): string
+    public function trans(TranslatorInterface $translator, ?string $locale = null): string
     {
-        return match ($this) {
-            self::Confirmed => 'Confirmée',
-            self::Cancelled => 'Annulée',
-        };
+        return $translator->trans('booking_status.'.$this->value, locale: $locale);
     }
 }

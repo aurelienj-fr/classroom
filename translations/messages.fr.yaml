@@ -1,0 +1,271 @@
+meta:
+    title_default: 'Réservez vos cours de sport et de bien-être'
+    description: 'Trouvez un studio près de chez vous et réservez vos cours de yoga, pilates, fitness ou danse en quelques clics.'
+
+nav:
+    find_class: 'Trouver un cours'
+    my_bookings: 'Mes réservations'
+    manage: 'Gérer mes studios'
+    admin: 'Administration'
+    login: 'Se connecter'
+    register: 'Créer un compte'
+    logout: 'Se déconnecter'
+    toggle: 'Afficher le menu'
+    language: 'Langue'
+
+footer:
+    tagline: 'réservez vos cours en quelques clics.'
+    studios: 'Studios'
+    publish: 'Publier mon studio'
+
+common:
+    actions: 'Actions'
+    breadcrumb: "Fil d'Ariane"
+    cancel: 'Annuler'
+    close: 'Fermer'
+    details: 'Détails'
+    edit: 'Modifier'
+    save: 'Enregistrer'
+    minutes: '%count% min'
+
+level:
+    all: 'Tous niveaux'
+    beginner: 'Débutant'
+    intermediate: 'Intermédiaire'
+    advanced: 'Avancé'
+
+booking_status:
+    confirmed: 'Confirmée'
+    cancelled: 'Annulée'
+
+search:
+    city: 'Ville ou code postal'
+    city_placeholder: 'Paris, Lyon, 33000…'
+    discipline: 'Discipline'
+    all_disciplines: 'Toutes les disciplines'
+    submit: 'Rechercher'
+    filter: 'Filtrer'
+
+home:
+    badge: 'Yoga · Pilates · Fitness · Danse'
+    title_line1: 'Votre prochain cours,'
+    title_line2: 'à deux pas de chez vous.'
+    lead: 'Comparez les studios de votre ville, consultez leur planning et réservez votre place en quelques secondes.'
+    explore: 'Explorer par discipline'
+    next_sessions: 'Prochains cours disponibles'
+    all_studios: 'Tous les studios'
+    no_sessions: 'Aucun cours planifié pour le moment. Revenez bientôt !'
+    owner:
+        title: 'Vous gérez un studio ?'
+        text: 'Publiez votre planning, gérez vos inscrits et le pointage des présences, gratuitement pendant la phase de lancement.'
+        cta: 'Publier mon studio'
+
+studio:
+    index:
+        title: 'Studios'
+        title_in: 'Studios à %city%'
+        heading: 'Trouver un studio'
+        count: '{0} Aucun studio trouvé|{1} 1 studio trouvé|]1,Inf[ %count% studios trouvés'
+        empty: 'Aucun studio ne correspond à votre recherche.'
+        see_all: 'Voir tous les studios'
+    show:
+        meta_description: 'Planning et réservation des cours de %studio% à %city%.'
+        cancellation_policy: "Annulation gratuite jusqu'à %hours% h avant le cours"
+        planning: 'Planning'
+        change_week: 'Changer de semaine'
+        previous_week: 'Semaine précédente'
+        next_week: 'Semaine suivante'
+        week_range: 'Du %start% au %end%'
+        empty: 'Aucun cours planifié sur cette période.'
+
+spots:
+    cancelled: 'Annulée'
+    finished: 'Terminée'
+    full: 'Complet'
+    left: '{1} 1 place|]1,Inf[ %count% places'
+
+session:
+    booked: 'Réservé'
+    show:
+        when: '%day%, de %start% à %end%'
+        with: 'Avec %name%'
+        registered: '%booked% / %capacity% inscrits'
+        booking: 'Réservation'
+        you_are_booked: 'Vous êtes inscrit(e) à cette séance.'
+        cancel: 'Annuler ma réservation'
+        cancel_confirm: 'Annuler votre réservation ?'
+        cancel_until: "Annulation possible jusqu'à %hours% h avant le début."
+        deadline_passed: "Le délai d'annulation (%hours% h) est dépassé."
+        cancelled_by_studio: 'Cette séance a été annulée par le studio.'
+        finished: 'Cette séance est terminée.'
+        full: 'Séance complète.'
+        book: 'Réserver ma place'
+        login_to_book: 'Se connecter pour réserver'
+        no_account: 'Pas encore de compte ?'
+        register: 'Inscrivez-vous gratuitement'
+
+account:
+    upcoming: 'À venir'
+    no_upcoming: "Vous n'avez aucune réservation à venir."
+    session_cancelled: 'Séance annulée'
+    booking_cancelled: 'Réservation annulée'
+    cancel: 'Annuler'
+    cancel_confirm: 'Annuler cette réservation ?'
+    history: 'Historique'
+    no_history: 'Aucun cours passé pour le moment.'
+    present: 'Présent(e)'
+
+login:
+    title: 'Connexion'
+    heading: 'Bon retour parmi nous'
+    remember_me: 'Rester connecté(e)'
+    submit: 'Se connecter'
+    register: 'Inscrivez-vous gratuitement'
+
+registration:
+    heading: 'Créer votre compte'
+    subtitle: 'Réservez vos cours ou publiez le planning de votre studio.'
+    submit: 'Créer mon compte'
+    already: 'Déjà inscrit(e) ?'
+    login: 'Connectez-vous'
+
+form:
+    choose: 'Choisir…'
+    user:
+        first_name: 'Prénom'
+        last_name: 'Nom'
+        email: 'Adresse e-mail'
+        password: 'Mot de passe'
+        password_help: '12 caractères minimum.'
+        password_confirm: 'Confirmation du mot de passe'
+        studio_owner: 'Je gère un studio et souhaite publier mes cours'
+        agree_terms: "J'accepte les conditions d'utilisation"
+    studio:
+        name: 'Nom du studio'
+        description: 'Présentation'
+        disciplines: 'Disciplines proposées'
+        address: 'Adresse'
+        postal_code: 'Code postal'
+        city: 'Ville'
+        phone: 'Téléphone'
+        email: 'E-mail de contact'
+        cancellation_deadline: "Délai d'annulation (heures)"
+        cancellation_deadline_help: "Les membres peuvent annuler jusqu'à ce délai avant le début de la séance."
+        published: 'Publier le studio (visible et réservable par le public)'
+    activity:
+        name: 'Nom du cours'
+        discipline: 'Discipline'
+        level: 'Niveau'
+        duration: 'Durée (minutes)'
+        capacity: 'Places par séance (par défaut)'
+        description: 'Description'
+    session:
+        starts_at: 'Début'
+        capacity: 'Nombre de places'
+        instructor: 'Professeur'
+        repetitions: 'Répéter chaque semaine pendant'
+        repetitions_help: 'Nombre de semaines supplémentaires (0 à %max%).'
+    discipline:
+        name: 'Nom (français)'
+        name_en: 'Nom en anglais'
+        name_es: 'Nom en espagnol'
+        name_translation_help: 'Laisser vide pour afficher le nom français.'
+        icon: 'Icône Font Awesome'
+        icon_help: "Nom de l'icône sans le préfixe « fa- » (ex. : dumbbell, person-swimming)."
+
+flash:
+    registration:
+        welcome: 'Bienvenue sur monStudio, %name% !'
+    booking:
+        confirmed: 'Votre place est réservée. À bientôt sur le tapis !'
+        cancelled: 'Votre réservation a été annulée.'
+    studio:
+        created: 'Studio créé. Ajoutez maintenant vos cours.'
+        updated: 'Studio mis à jour.'
+    activity:
+        created: 'Cours créé. Planifiez maintenant ses séances.'
+        updated: 'Cours mis à jour. Les séances déjà planifiées conservent leur horaire.'
+        discipline_required: "Associez d'abord au moins une discipline à votre studio."
+    session:
+        scheduled: '{1} 1 séance planifiée.|]1,Inf[ %count% séances planifiées.'
+        updated: 'Séance mise à jour.'
+        cancelled: 'Séance annulée.'
+        restored: 'Séance rétablie.'
+    discipline:
+        created: 'Discipline créée.'
+        updated: 'Discipline mise à jour.'
+
+booking:
+    error:
+        session_cancelled: 'Cette séance a été annulée par le studio.'
+        session_started: 'Cette séance a déjà commencé ou est terminée.'
+        studio_not_published: "Ce studio n'accepte pas de réservations pour le moment."
+        already_booked: 'Vous avez déjà réservé cette séance.'
+        session_full: 'Cette séance est complète.'
+        not_confirmed: 'Cette réservation est déjà annulée.'
+        cancellation_deadline_passed: "Le délai d'annulation est dépassé : annulation possible jusqu'à %hours% h avant le début de la séance."
+        session_not_found: 'Séance introuvable.'
+
+manage:
+    my_studios: 'Mes studios'
+    dashboard:
+        empty_title: 'Créez votre premier studio'
+        empty_text: 'Renseignez vos coordonnées et vos disciplines, puis planifiez vos cours.'
+        create_first: 'Créer mon studio'
+        activities_count: '{0} Aucun cours|{1} 1 cours|]1,Inf[ %count% cours'
+        schedule: 'Planning et cours'
+    studio:
+        new: 'Nouveau studio'
+        edit_title: 'Modifier le studio'
+        published: 'Publié'
+        draft: 'Brouillon'
+        draft_hidden: 'Brouillon — non visible du public'
+        public_page: 'Voir la page publique'
+        activities: 'Cours'
+        no_activities: 'Aucun cours. Créez un cours (ex. : « Hatha yoga – 60 min ») puis planifiez ses séances.'
+        upcoming: 'Prochaines séances'
+        no_sessions: 'Aucune séance planifiée.'
+    activity:
+        new: 'Nouveau cours'
+        edit_title: 'Modifier le cours'
+    session:
+        new: 'Planifier une séance'
+        edit_title: 'Modifier la séance'
+        breadcrumb: 'Séance'
+        cancel: 'Annuler la séance'
+        cancel_confirm: 'Annuler cette séance ? Les inscrits la verront comme annulée.'
+        restore: 'Rétablir'
+        restore_confirm: 'Rétablir cette séance ?'
+        no_attendees: 'Aucun inscrit pour le moment.'
+        check_in: 'Pointer'
+    col:
+        date: 'Date'
+        activity: 'Cours'
+        booked: 'Inscrits'
+        member: 'Membre'
+        email: 'E-mail'
+        booked_at: 'Réservé le'
+        attendance: 'Présence'
+
+admin:
+    discipline:
+        title: 'Disciplines'
+        new: 'Nouvelle discipline'
+        edit_title: 'Modifier la discipline'
+        col_icon: 'Icône'
+        col_translations: 'Traductions'
+        col_slug: 'Slug'
+        empty: 'Aucune discipline.'
+        icon_catalog: 'Catalogue des icônes Font Awesome gratuites'
+
+error:
+    back_home: "Retour à l'accueil"
+    404:
+        title: 'Page introuvable'
+        text: "Cette page n'existe pas ou n'est plus disponible."
+    403:
+        title: 'Accès refusé'
+        text: "Vous n'avez pas accès à cette page."
+    generic:
+        title: 'Erreur'
+        text: 'Une erreur est survenue. Réessayez dans quelques instants.'

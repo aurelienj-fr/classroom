@@ -26,15 +26,16 @@ final class AppFixtures extends Fixture
 {
     public const string PASSWORD = 'monstudio-demo';
 
+    /** French name => [icon, English name, Spanish name]. */
     private const array DISCIPLINES = [
-        'Yoga' => 'spa',
-        'Pilates' => 'child-reaching',
-        'Fitness' => 'dumbbell',
-        'Danse' => 'music',
-        'Boxe' => 'hand-fist',
-        'Vélo indoor' => 'person-biking',
-        'Méditation' => 'leaf',
-        'Cardio HIIT' => 'heart-pulse',
+        'Yoga' => ['spa', 'Yoga', 'Yoga'],
+        'Pilates' => ['child-reaching', 'Pilates', 'Pilates'],
+        'Fitness' => ['dumbbell', 'Fitness', 'Fitness'],
+        'Danse' => ['music', 'Dance', 'Danza'],
+        'Boxe' => ['hand-fist', 'Boxing', 'Boxeo'],
+        'Vélo indoor' => ['person-biking', 'Indoor cycling', 'Ciclo indoor'],
+        'Méditation' => ['leaf', 'Meditation', 'Meditación'],
+        'Cardio HIIT' => ['heart-pulse', 'HIIT cardio', 'Cardio HIIT'],
     ];
 
     public function __construct(
@@ -45,9 +46,14 @@ final class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        /** @var array<string, Discipline> $disciplines */
         $disciplines = [];
-        foreach (self::DISCIPLINES as $name => $icon) {
-            $discipline = (new Discipline())->setName($name)->setIcon($icon);
+        foreach (self::DISCIPLINES as $name => [$icon, $english, $spanish]) {
+            $discipline = (new Discipline())
+                ->setName($name)
+                ->setIcon($icon)
+                ->setNameTranslation('en', $english)
+                ->setNameTranslation('es', $spanish);
             $manager->persist($discipline);
             $disciplines[$name] = $discipline;
         }

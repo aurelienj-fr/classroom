@@ -1,0 +1,271 @@
+meta:
+    title_default: 'Reserva tus clases de deporte y bienestar'
+    description: 'Encuentra un estudio cerca de ti y reserva clases de yoga, pilates, fitness o danza en pocos clics.'
+
+nav:
+    find_class: 'Buscar una clase'
+    my_bookings: 'Mis reservas'
+    manage: 'Gestionar mis estudios'
+    admin: 'Administración'
+    login: 'Iniciar sesión'
+    register: 'Crear una cuenta'
+    logout: 'Cerrar sesión'
+    toggle: 'Mostrar el menú'
+    language: 'Idioma'
+
+footer:
+    tagline: 'reserva tus clases en pocos clics.'
+    studios: 'Estudios'
+    publish: 'Publicar mi estudio'
+
+common:
+    actions: 'Acciones'
+    breadcrumb: 'Ruta de navegación'
+    cancel: 'Cancelar'
+    close: 'Cerrar'
+    details: 'Detalles'
+    edit: 'Editar'
+    save: 'Guardar'
+    minutes: '%count% min'
+
+level:
+    all: 'Todos los niveles'
+    beginner: 'Principiante'
+    intermediate: 'Intermedio'
+    advanced: 'Avanzado'
+
+booking_status:
+    confirmed: 'Confirmada'
+    cancelled: 'Cancelada'
+
+search:
+    city: 'Ciudad o código postal'
+    city_placeholder: 'París, Lyon, 33000…'
+    discipline: 'Disciplina'
+    all_disciplines: 'Todas las disciplinas'
+    submit: 'Buscar'
+    filter: 'Filtrar'
+
+home:
+    badge: 'Yoga · Pilates · Fitness · Danza'
+    title_line1: 'Tu próxima clase,'
+    title_line2: 'a dos pasos de casa.'
+    lead: 'Compara los estudios de tu ciudad, consulta su horario y reserva tu plaza en segundos.'
+    explore: 'Explorar por disciplina'
+    next_sessions: 'Próximas clases disponibles'
+    all_studios: 'Todos los estudios'
+    no_sessions: 'Todavía no hay clases programadas. ¡Vuelve pronto!'
+    owner:
+        title: '¿Gestionas un estudio?'
+        text: 'Publica tu horario, gestiona las reservas y controla la asistencia, gratis durante el lanzamiento.'
+        cta: 'Publicar mi estudio'
+
+studio:
+    index:
+        title: 'Estudios'
+        title_in: 'Estudios en %city%'
+        heading: 'Buscar un estudio'
+        count: '{0} Ningún estudio encontrado|{1} 1 estudio encontrado|]1,Inf[ %count% estudios encontrados'
+        empty: 'Ningún estudio coincide con tu búsqueda.'
+        see_all: 'Ver todos los estudios'
+    show:
+        meta_description: 'Horario y reserva de clases de %studio% en %city%.'
+        cancellation_policy: 'Cancelación gratuita hasta %hours% h antes de la clase'
+        planning: 'Horario'
+        change_week: 'Cambiar de semana'
+        previous_week: 'Semana anterior'
+        next_week: 'Semana siguiente'
+        week_range: 'Del %start% al %end%'
+        empty: 'No hay clases programadas en este periodo.'
+
+spots:
+    cancelled: 'Cancelada'
+    finished: 'Terminada'
+    full: 'Completa'
+    left: '{1} 1 plaza|]1,Inf[ %count% plazas'
+
+session:
+    booked: 'Reservada'
+    show:
+        when: '%day%, de %start% a %end%'
+        with: 'Con %name%'
+        registered: '%booked% / %capacity% inscritos'
+        booking: 'Reserva'
+        you_are_booked: 'Tienes una plaza reservada en esta clase.'
+        cancel: 'Cancelar mi reserva'
+        cancel_confirm: '¿Cancelar tu reserva?'
+        cancel_until: 'Puedes cancelar hasta %hours% h antes del inicio.'
+        deadline_passed: 'El plazo de cancelación (%hours% h) ha vencido.'
+        cancelled_by_studio: 'El estudio ha cancelado esta clase.'
+        finished: 'Esta clase ha terminado.'
+        full: 'Clase completa.'
+        book: 'Reservar mi plaza'
+        login_to_book: 'Inicia sesión para reservar'
+        no_account: '¿Todavía no tienes cuenta?'
+        register: 'Regístrate gratis'
+
+account:
+    upcoming: 'Próximas'
+    no_upcoming: 'No tienes ninguna reserva próxima.'
+    session_cancelled: 'Clase cancelada'
+    booking_cancelled: 'Reserva cancelada'
+    cancel: 'Cancelar'
+    cancel_confirm: '¿Cancelar esta reserva?'
+    history: 'Historial'
+    no_history: 'Todavía no hay clases pasadas.'
+    present: 'Asistió'
+
+login:
+    title: 'Iniciar sesión'
+    heading: 'Bienvenido de nuevo'
+    remember_me: 'Mantener la sesión iniciada'
+    submit: 'Iniciar sesión'
+    register: 'Regístrate gratis'
+
+registration:
+    heading: 'Crea tu cuenta'
+    subtitle: 'Reserva clases o publica el horario de tu estudio.'
+    submit: 'Crear mi cuenta'
+    already: '¿Ya tienes cuenta?'
+    login: 'Inicia sesión'
+
+form:
+    choose: 'Elegir…'
+    user:
+        first_name: 'Nombre'
+        last_name: 'Apellidos'
+        email: 'Correo electrónico'
+        password: 'Contraseña'
+        password_help: 'Mínimo 12 caracteres.'
+        password_confirm: 'Confirmar contraseña'
+        studio_owner: 'Gestiono un estudio y quiero publicar mis clases'
+        agree_terms: 'Acepto las condiciones de uso'
+    studio:
+        name: 'Nombre del estudio'
+        description: 'Presentación'
+        disciplines: 'Disciplinas ofrecidas'
+        address: 'Dirección'
+        postal_code: 'Código postal'
+        city: 'Ciudad'
+        phone: 'Teléfono'
+        email: 'Correo de contacto'
+        cancellation_deadline: 'Plazo de cancelación (horas)'
+        cancellation_deadline_help: 'Los miembros pueden cancelar hasta este plazo antes del inicio de la clase.'
+        published: 'Publicar el estudio (visible y reservable por el público)'
+    activity:
+        name: 'Nombre de la clase'
+        discipline: 'Disciplina'
+        level: 'Nivel'
+        duration: 'Duración (minutos)'
+        capacity: 'Plazas por sesión (por defecto)'
+        description: 'Descripción'
+    session:
+        starts_at: 'Inicio'
+        capacity: 'Número de plazas'
+        instructor: 'Profesor'
+        repetitions: 'Repetir cada semana durante'
+        repetitions_help: 'Número de semanas adicionales (de 0 a %max%).'
+    discipline:
+        name: 'Nombre (francés)'
+        name_en: 'Nombre en inglés'
+        name_es: 'Nombre en español'
+        name_translation_help: 'Déjalo vacío para mostrar el nombre en francés.'
+        icon: 'Icono de Font Awesome'
+        icon_help: 'Nombre del icono sin el prefijo «fa-» (p. ej.: dumbbell, person-swimming).'
+
+flash:
+    registration:
+        welcome: '¡Bienvenido a monStudio, %name%!'
+    booking:
+        confirmed: 'Tu plaza está reservada. ¡Nos vemos en la esterilla!'
+        cancelled: 'Tu reserva ha sido cancelada.'
+    studio:
+        created: 'Estudio creado. Ahora añade tus clases.'
+        updated: 'Estudio actualizado.'
+    activity:
+        created: 'Clase creada. Ahora programa sus sesiones.'
+        updated: 'Clase actualizada. Las sesiones ya programadas conservan su horario.'
+        discipline_required: 'Asocia primero al menos una disciplina a tu estudio.'
+    session:
+        scheduled: '{1} 1 sesión programada.|]1,Inf[ %count% sesiones programadas.'
+        updated: 'Sesión actualizada.'
+        cancelled: 'Sesión cancelada.'
+        restored: 'Sesión restablecida.'
+    discipline:
+        created: 'Disciplina creada.'
+        updated: 'Disciplina actualizada.'
+
+booking:
+    error:
+        session_cancelled: 'El estudio ha cancelado esta clase.'
+        session_started: 'Esta clase ya ha empezado o ha terminado.'
+        studio_not_published: 'Este estudio no acepta reservas por el momento.'
+        already_booked: 'Ya has reservado esta clase.'
+        session_full: 'Esta clase está completa.'
+        not_confirmed: 'Esta reserva ya está cancelada.'
+        cancellation_deadline_passed: 'El plazo de cancelación ha vencido: se puede cancelar hasta %hours% h antes del inicio de la clase.'
+        session_not_found: 'Clase no encontrada.'
+
+manage:
+    my_studios: 'Mis estudios'
+    dashboard:
+        empty_title: 'Crea tu primer estudio'
+        empty_text: 'Indica tus datos de contacto y tus disciplinas y, después, programa tus clases.'
+        create_first: 'Crear mi estudio'
+        activities_count: '{0} Ninguna clase|{1} 1 clase|]1,Inf[ %count% clases'
+        schedule: 'Horario y clases'
+    studio:
+        new: 'Nuevo estudio'
+        edit_title: 'Editar el estudio'
+        published: 'Publicado'
+        draft: 'Borrador'
+        draft_hidden: 'Borrador — no visible para el público'
+        public_page: 'Ver la página pública'
+        activities: 'Clases'
+        no_activities: 'Todavía no hay clases. Crea una clase (p. ej.: «Hatha yoga – 60 min») y programa sus sesiones.'
+        upcoming: 'Próximas sesiones'
+        no_sessions: 'No hay sesiones programadas.'
+    activity:
+        new: 'Nueva clase'
+        edit_title: 'Editar la clase'
+    session:
+        new: 'Programar una sesión'
+        edit_title: 'Editar la sesión'
+        breadcrumb: 'Sesión'
+        cancel: 'Cancelar la sesión'
+        cancel_confirm: '¿Cancelar esta sesión? Los inscritos la verán como cancelada.'
+        restore: 'Restablecer'
+        restore_confirm: '¿Restablecer esta sesión?'
+        no_attendees: 'Todavía no hay inscritos.'
+        check_in: 'Marcar asistencia'
+    col:
+        date: 'Fecha'
+        activity: 'Clase'
+        booked: 'Inscritos'
+        member: 'Miembro'
+        email: 'Correo'
+        booked_at: 'Reservado el'
+        attendance: 'Asistencia'
+
+admin:
+    discipline:
+        title: 'Disciplinas'
+        new: 'Nueva disciplina'
+        edit_title: 'Editar la disciplina'
+        col_icon: 'Icono'
+        col_translations: 'Traducciones'
+        col_slug: 'Slug'
+        empty: 'No hay disciplinas.'
+        icon_catalog: 'Catálogo de iconos gratuitos de Font Awesome'
+
+error:
+    back_home: 'Volver a la página de inicio'
+    404:
+        title: 'Página no encontrada'
+        text: 'Esta página no existe o ya no está disponible.'
+    403:
+        title: 'Acceso denegado'
+        text: 'No tienes acceso a esta página.'
+    generic:
+        title: 'Error'
+        text: 'Se ha producido un error. Inténtalo de nuevo en unos instantes.'

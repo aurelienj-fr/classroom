@@ -1,0 +1,271 @@
+meta:
+    title_default: 'Book fitness and wellness classes'
+    description: 'Find a studio near you and book yoga, Pilates, fitness or dance classes in a few clicks.'
+
+nav:
+    find_class: 'Find a class'
+    my_bookings: 'My bookings'
+    manage: 'Manage my studios'
+    admin: 'Administration'
+    login: 'Log in'
+    register: 'Sign up'
+    logout: 'Log out'
+    toggle: 'Toggle navigation'
+    language: 'Language'
+
+footer:
+    tagline: 'book your classes in a few clicks.'
+    studios: 'Studios'
+    publish: 'List my studio'
+
+common:
+    actions: 'Actions'
+    breadcrumb: 'Breadcrumb'
+    cancel: 'Cancel'
+    close: 'Close'
+    details: 'Details'
+    edit: 'Edit'
+    save: 'Save'
+    minutes: '%count% min'
+
+level:
+    all: 'All levels'
+    beginner: 'Beginner'
+    intermediate: 'Intermediate'
+    advanced: 'Advanced'
+
+booking_status:
+    confirmed: 'Confirmed'
+    cancelled: 'Cancelled'
+
+search:
+    city: 'City or postcode'
+    city_placeholder: 'Paris, Lyon, 33000…'
+    discipline: 'Discipline'
+    all_disciplines: 'All disciplines'
+    submit: 'Search'
+    filter: 'Filter'
+
+home:
+    badge: 'Yoga · Pilates · Fitness · Dance'
+    title_line1: 'Your next class,'
+    title_line2: 'just around the corner.'
+    lead: 'Compare the studios in your city, check their timetable and book your spot in seconds.'
+    explore: 'Explore by discipline'
+    next_sessions: 'Upcoming classes'
+    all_studios: 'All studios'
+    no_sessions: 'No classes scheduled yet. Check back soon!'
+    owner:
+        title: 'Do you run a studio?'
+        text: 'Publish your timetable, manage bookings and take attendance, free of charge during our launch.'
+        cta: 'List my studio'
+
+studio:
+    index:
+        title: 'Studios'
+        title_in: 'Studios in %city%'
+        heading: 'Find a studio'
+        count: '{0} No studios found|{1} 1 studio found|]1,Inf[ %count% studios found'
+        empty: 'No studio matches your search.'
+        see_all: 'See all studios'
+    show:
+        meta_description: '%studio% class timetable and booking in %city%.'
+        cancellation_policy: 'Free cancellation up to %hours% h before the class'
+        planning: 'Timetable'
+        change_week: 'Change week'
+        previous_week: 'Previous week'
+        next_week: 'Next week'
+        week_range: '%start% – %end%'
+        empty: 'No classes scheduled during this period.'
+
+spots:
+    cancelled: 'Cancelled'
+    finished: 'Finished'
+    full: 'Full'
+    left: '{1} 1 spot left|]1,Inf[ %count% spots left'
+
+session:
+    booked: 'Booked'
+    show:
+        when: '%day%, %start% – %end%'
+        with: 'With %name%'
+        registered: '%booked% / %capacity% booked'
+        booking: 'Booking'
+        you_are_booked: 'You are booked for this class.'
+        cancel: 'Cancel my booking'
+        cancel_confirm: 'Cancel your booking?'
+        cancel_until: 'You can cancel up to %hours% h before the class starts.'
+        deadline_passed: 'The cancellation deadline (%hours% h) has passed.'
+        cancelled_by_studio: 'This class has been cancelled by the studio.'
+        finished: 'This class is over.'
+        full: 'This class is full.'
+        book: 'Book my spot'
+        login_to_book: 'Log in to book'
+        no_account: "Don't have an account yet?"
+        register: 'Sign up for free'
+
+account:
+    upcoming: 'Upcoming'
+    no_upcoming: "You don't have any upcoming bookings."
+    session_cancelled: 'Class cancelled'
+    booking_cancelled: 'Booking cancelled'
+    cancel: 'Cancel'
+    cancel_confirm: 'Cancel this booking?'
+    history: 'History'
+    no_history: 'No past classes yet.'
+    present: 'Attended'
+
+login:
+    title: 'Log in'
+    heading: 'Welcome back'
+    remember_me: 'Keep me logged in'
+    submit: 'Log in'
+    register: 'Sign up for free'
+
+registration:
+    heading: 'Create your account'
+    subtitle: 'Book classes or publish your studio timetable.'
+    submit: 'Create my account'
+    already: 'Already have an account?'
+    login: 'Log in'
+
+form:
+    choose: 'Choose…'
+    user:
+        first_name: 'First name'
+        last_name: 'Last name'
+        email: 'Email address'
+        password: 'Password'
+        password_help: 'At least 12 characters.'
+        password_confirm: 'Confirm password'
+        studio_owner: 'I run a studio and want to publish my classes'
+        agree_terms: 'I accept the terms of use'
+    studio:
+        name: 'Studio name'
+        description: 'About the studio'
+        disciplines: 'Disciplines offered'
+        address: 'Address'
+        postal_code: 'Postcode'
+        city: 'City'
+        phone: 'Phone'
+        email: 'Contact email'
+        cancellation_deadline: 'Cancellation deadline (hours)'
+        cancellation_deadline_help: 'Members can cancel up to this many hours before the class starts.'
+        published: 'Publish the studio (visible and bookable by the public)'
+    activity:
+        name: 'Class name'
+        discipline: 'Discipline'
+        level: 'Level'
+        duration: 'Duration (minutes)'
+        capacity: 'Spots per session (default)'
+        description: 'Description'
+    session:
+        starts_at: 'Start'
+        capacity: 'Number of spots'
+        instructor: 'Instructor'
+        repetitions: 'Repeat every week for'
+        repetitions_help: 'Number of additional weeks (0 to %max%).'
+    discipline:
+        name: 'Name (French)'
+        name_en: 'Name in English'
+        name_es: 'Name in Spanish'
+        name_translation_help: 'Leave empty to display the French name.'
+        icon: 'Font Awesome icon'
+        icon_help: 'Icon name without the "fa-" prefix (e.g. dumbbell, person-swimming).'
+
+flash:
+    registration:
+        welcome: 'Welcome to monStudio, %name%!'
+    booking:
+        confirmed: 'Your spot is booked. See you on the mat!'
+        cancelled: 'Your booking has been cancelled.'
+    studio:
+        created: 'Studio created. Now add your classes.'
+        updated: 'Studio updated.'
+    activity:
+        created: 'Class created. Now schedule its sessions.'
+        updated: 'Class updated. Sessions already scheduled keep their times.'
+        discipline_required: 'First link at least one discipline to your studio.'
+    session:
+        scheduled: '{1} 1 session scheduled.|]1,Inf[ %count% sessions scheduled.'
+        updated: 'Session updated.'
+        cancelled: 'Session cancelled.'
+        restored: 'Session restored.'
+    discipline:
+        created: 'Discipline created.'
+        updated: 'Discipline updated.'
+
+booking:
+    error:
+        session_cancelled: 'This class has been cancelled by the studio.'
+        session_started: 'This class has already started or is over.'
+        studio_not_published: 'This studio is not taking bookings at the moment.'
+        already_booked: 'You have already booked this class.'
+        session_full: 'This class is full.'
+        not_confirmed: 'This booking is already cancelled.'
+        cancellation_deadline_passed: 'The cancellation deadline has passed: bookings can be cancelled up to %hours% h before the class starts.'
+        session_not_found: 'Class not found.'
+
+manage:
+    my_studios: 'My studios'
+    dashboard:
+        empty_title: 'Create your first studio'
+        empty_text: 'Enter your contact details and disciplines, then schedule your classes.'
+        create_first: 'Create my studio'
+        activities_count: '{0} No classes|{1} 1 class|]1,Inf[ %count% classes'
+        schedule: 'Timetable and classes'
+    studio:
+        new: 'New studio'
+        edit_title: 'Edit studio'
+        published: 'Published'
+        draft: 'Draft'
+        draft_hidden: 'Draft — not visible to the public'
+        public_page: 'View public page'
+        activities: 'Classes'
+        no_activities: 'No classes yet. Create a class (e.g. "Hatha yoga – 60 min"), then schedule its sessions.'
+        upcoming: 'Upcoming sessions'
+        no_sessions: 'No sessions scheduled.'
+    activity:
+        new: 'New class'
+        edit_title: 'Edit class'
+    session:
+        new: 'Schedule a session'
+        edit_title: 'Edit session'
+        breadcrumb: 'Session'
+        cancel: 'Cancel session'
+        cancel_confirm: 'Cancel this session? Members who booked will see it as cancelled.'
+        restore: 'Restore'
+        restore_confirm: 'Restore this session?'
+        no_attendees: 'No bookings yet.'
+        check_in: 'Check in'
+    col:
+        date: 'Date'
+        activity: 'Class'
+        booked: 'Booked'
+        member: 'Member'
+        email: 'Email'
+        booked_at: 'Booked on'
+        attendance: 'Attendance'
+
+admin:
+    discipline:
+        title: 'Disciplines'
+        new: 'New discipline'
+        edit_title: 'Edit discipline'
+        col_icon: 'Icon'
+        col_translations: 'Translations'
+        col_slug: 'Slug'
+        empty: 'No disciplines.'
+        icon_catalog: 'Browse free Font Awesome icons'
+
+error:
+    back_home: 'Back to home page'
+    404:
+        title: 'Page not found'
+        text: 'This page does not exist or is no longer available.'
+    403:
+        title: 'Access denied'
+        text: 'You do not have access to this page.'
+    generic:
+        title: 'Error'
+        text: 'Something went wrong. Please try again in a moment.'

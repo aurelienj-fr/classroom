@@ -15,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted(User::ROLE_OWNER)]
 final class DashboardController extends AbstractController
 {
-    #[Route('/gestion', name: 'app_manage_dashboard', methods: ['GET'])]
+    #[Route(['fr' => '/gestion', 'en' => '/manage', 'es' => '/gestion'], name: 'app_manage_dashboard', methods: ['GET'])]
     public function index(StudioRepository $studioRepository, #[CurrentUser] User $user): Response
     {
         return $this->render('manage/dashboard.html.twig', [

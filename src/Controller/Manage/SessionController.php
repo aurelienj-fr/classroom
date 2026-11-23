@@ -22,28 +22,35 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route('/gestion')]
+#[Route(['fr' => '/gestion', 'en' => '/manage', 'es' => '/gestion'])]
 #[IsGranted(User::ROLE_OWNER)]
 final class SessionController extends AbstractController
 {
-    #[Route('/cours/{id}/seances/nouvelle', name: 'app_manage_session_new', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route(['fr' => '/cours/{id}/seances/nouvelle', 'en' => '/activities/{id}/sessions/new', 'es' => '/actividades/{id}/sesiones/nueva'], name: 'app_manage_session_new', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     #[IsGranted(StudioVoter::MANAGE, subject: new Expression('args["activity"].getStudio()'))]
-    public function new(Activity $activity, Request $request, SessionScheduler $scheduler, ClockInterface $clock): Response
-    {
+    public function new(
+        Activity $activity,
+        Request $request,
+        SessionScheduler $scheduler,
+        ClockInterface $clock,
+        TranslatorInterface $translator,
+    ): Response {
         $session = new ClassSession($activity, $clock->now()->modify('+1 day')->setTime(18, 0));
         $form = $this->createForm(ClassSessionType::class, $session, ['allow_repetition' => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $session->hasStarted($clock->now())) {
-            $form->get('startsAt')->addError(new FormError('La séance doit commencer dans le futur.'));
+            $form->get('startsAt')->addError(new FormError($translator->trans('session.must_start_in_future', domain: 'validators')));
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var int $repetitions */
             $repetitions = $form->get('weeklyRepetitions')->getData();
             $created = $scheduler->schedule($session, $repetitions);
-            $this->addFlash('success', \sprintf('%d séance(s) planifiée(s).', \count($created)));
+            $this->addFlash('success', new TranslatableMessage('flash.session.scheduled', ['%count%' => \count($created)]));
 
             return $this->redirectToRoute('app_manage_studio_show', ['id' => $activity->getStudio()->getId()]);
         }
@@ -55,7 +62,7 @@ final class SessionController extends AbstractController
         ]);
     }
 
-    #[Route('/seances/{id}', name: 'app_manage_session_show', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route(['fr' => '/seances/{id}', 'en' => '/sessions/{id}', 'es' => '/sesiones/{id}'], name: 'app_manage_session_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted(StudioVoter::MANAGE, subject: new Expression('args["session"].getStudio()'))]
     public function show(ClassSession $session): Response
     {
@@ -65,13 +72,14 @@ final class SessionController extends AbstractController
         ]);
     }
 
-    #[Route('/seances/{id}/modifier', name: 'app_manage_session_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route(['fr' => '/seances/{id}/modifier', 'en' => '/sessions/{id}/edit', 'es' => '/sesiones/{id}/editar'], name: 'app_manage_session_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     #[IsGranted(StudioVoter::MANAGE, subject: new Expression('args["session"].getStudio()'))]
     public function edit(
         ClassSession $session,
         Request $request,
         EntityManagerInterface $entityManager,
         BookingRepository $bookingRepository,
+        TranslatorInterface $translator,
     ): Response {
         $form = $this->createForm(ClassSessionType::class, $session);
         $form->handleRequest($request);
@@ -79,13 +87,13 @@ final class SessionController extends AbstractController
         if ($form->isSubmitted()) {
             $booked = $bookingRepository->countConfirmedForSession($session);
             if ($session->getCapacity() < $booked) {
-                $form->get('capacity')->addError(new FormError(\sprintf('%d membre(s) ont déjà réservé : la capacité ne peut pas être inférieure.', $booked)));
+                $form->get('capacity')->addError(new FormError($translator->trans('session.capacity_below_bookings', ['%count%' => $booked], 'validators')));
             }
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('success', 'Séance mise à jour.');
+            $this->addFlash('success', new TranslatableMessage('flash.session.updated'));
 
             return $this->redirectToRoute('app_manage_session_show', ['id' => $session->getId()]);
         }
@@ -97,19 +105,19 @@ final class SessionController extends AbstractController
         ]);
     }
 
-    #[Route('/seances/{id}/annulation', name: 'app_manage_session_toggle_cancel', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route(['fr' => '/seances/{id}/annulation', 'en' => '/sessions/{id}/cancellation', 'es' => '/sesiones/{id}/anulacion'], name: 'app_manage_session_toggle_cancel', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted(StudioVoter::MANAGE, subject: new Expression('args["session"].getStudio()'))]
     #[IsCsrfTokenValid(new Expression('"toggle-session-" ~ args["session"].getId()'))]
     public function toggleCancel(ClassSession $session, EntityManagerInterface $entityManager): Response
     {
         $session->setCancelled(!$session->isCancelled());
         $entityManager->flush();
-        $this->addFlash('success', $session->isCancelled() ? 'Séance annulée.' : 'Séance rétablie.');
+        $this->addFlash('success', new TranslatableMessage($session->isCancelled() ? 'flash.session.cancelled' : 'flash.session.restored'));
 
         return $this->redirectToRoute('app_manage_session_show', ['id' => $session->getId()]);
     }
 
-    #[Route('/reservations/{id}/presence', name: 'app_manage_booking_check_in', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route(['fr' => '/reservations/{id}/presence', 'en' => '/bookings/{id}/attendance', 'es' => '/reservas/{id}/asistencia'], name: 'app_manage_booking_check_in', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted(StudioVoter::MANAGE, subject: new Expression('args["booking"].getSession().getStudio()'))]
     #[IsCsrfTokenValid(new Expression('"check-in-" ~ args["booking"].getId()'))]
     public function toggleCheckIn(Booking $booking, EntityManagerInterface $entityManager, ClockInterface $clock): Response

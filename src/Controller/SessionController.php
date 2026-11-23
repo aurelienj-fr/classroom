@@ -17,10 +17,11 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
 
 final class SessionController extends AbstractController
 {
-    #[Route('/seances/{id}', name: 'app_session_show', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route(['fr' => '/seances/{id}', 'en' => '/classes/{id}', 'es' => '/clases/{id}'], name: 'app_session_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(
         ClassSession $session,
         BookingRepository $bookingRepository,
@@ -28,7 +29,7 @@ final class SessionController extends AbstractController
         ClockInterface $clock,
     ): Response {
         if (!$session->getStudio()->isPublished()) {
-            throw $this->createNotFoundException('Séance introuvable.');
+            throw $this->createNotFoundException('Session not found.');
         }
 
         $user = $this->getUser();
@@ -44,16 +45,16 @@ final class SessionController extends AbstractController
         ]);
     }
 
-    #[Route('/seances/{id}/reserver', name: 'app_session_book', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route(['fr' => '/seances/{id}/reserver', 'en' => '/classes/{id}/book', 'es' => '/clases/{id}/reservar'], name: 'app_session_book', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
     #[IsCsrfTokenValid(new Expression('"book-session-" ~ args["session"].getId()'))]
     public function book(ClassSession $session, BookingManager $bookingManager, #[CurrentUser] User $user): Response
     {
         try {
             $bookingManager->book($user, $session);
-            $this->addFlash('success', 'Votre place est réservée. À bientôt sur le tapis !');
+            $this->addFlash('success', new TranslatableMessage('flash.booking.confirmed'));
         } catch (BookingException $exception) {
-            $this->addFlash('danger', $exception->getMessage());
+            $this->addFlash('danger', $exception->getTranslatable());
         }
 
         return $this->redirectToRoute('app_session_show', ['id' => $session->getId()]);

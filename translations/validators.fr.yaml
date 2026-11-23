@@ -1,0 +1,28 @@
+user:
+    email:
+        already_used: 'Un compte existe déjà avec cette adresse e-mail.'
+    password:
+        blank: 'Choisissez un mot de passe.'
+        too_short: 'Le mot de passe doit contenir au moins {{ limit }} caractères.'
+        compromised: 'Ce mot de passe figure dans une fuite de données connue, choisissez-en un autre.'
+        mismatch: 'Les mots de passe ne correspondent pas.'
+    terms:
+        required: "Vous devez accepter les conditions d'utilisation."
+discipline:
+    name:
+        already_exists: 'Cette discipline existe déjà.'
+    icon:
+        invalid: "Nom d'icône Font Awesome invalide (ex. : dumbbell)."
+studio:
+    postal_code:
+        invalid: 'Code postal invalide (5 chiffres).'
+    disciplines:
+        required: 'Sélectionnez au moins une discipline.'
+activity:
+    discipline:
+        required: 'Choisissez une discipline.'
+session:
+    starts_at:
+        required: "Indiquez la date et l'heure de début."
+    must_start_in_future: 'La séance doit commencer dans le futur.'
+    capacity_below_bookings: '{1} 1 membre a déjà réservé : la capacité ne peut pas être inférieure.|]1,Inf[ %count% membres ont déjà réservé : la capacité ne peut pas être inférieure.'

@@ -1,19 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gérer mes studios{% endblock %}
+{% block title %}{{ 'nav.manage'|trans }}{% endblock %}
 
 {% block body %}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 mb-0">Mes studios</h1>
-        <a href="{{ path('app_manage_studio_new') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i>Nouveau studio</a>
+        <h1 class="h2 mb-0">{{ 'manage.my_studios'|trans }}</h1>
+        <a href="{{ path('app_manage_studio_new') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i>{{ 'manage.studio.new'|trans }}</a>
     </div>
 
     {% if studios is empty %}
         <div class="ms-card p-5 text-center">
             <i class="fa-solid fa-store fa-2x text-primary mb-3" aria-hidden="true"></i>
-            <h2 class="h5">Créez votre premier studio</h2>
-            <p class="text-body-secondary">Renseignez vos coordonnées et vos disciplines, puis planifiez vos cours.</p>
-            <a href="{{ path('app_manage_studio_new') }}" class="btn btn-primary">Créer mon studio</a>
+            <h2 class="h5">{{ 'manage.dashboard.empty_title'|trans }}</h2>
+            <p class="text-body-secondary">{{ 'manage.dashboard.empty_text'|trans }}</p>
+            <a href="{{ path('app_manage_studio_new') }}" class="btn btn-primary">{{ 'manage.dashboard.create_first'|trans }}</a>
         </div>
     {% else %}
         <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -23,18 +23,18 @@
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <h2 class="h5 mb-0">{{ studio.name }}</h2>
                             {% if studio.published %}
-                                <span class="badge text-bg-success">Publié</span>
+                                <span class="badge text-bg-success">{{ 'manage.studio.published'|trans }}</span>
                             {% else %}
-                                <span class="badge text-bg-secondary">Brouillon</span>
+                                <span class="badge text-bg-secondary">{{ 'manage.studio.draft'|trans }}</span>
                             {% endif %}
                         </div>
                         <p class="small text-body-secondary mb-3"><i class="fa-solid fa-location-dot me-1" aria-hidden="true"></i>{{ studio.fullAddress }}</p>
-                        <p class="small mb-3">{{ studio.activities|length }} cours · {{ studio.disciplines|map(d => d.name)|join(', ') }}</p>
+                        <p class="small mb-3">{{ 'manage.dashboard.activities_count'|trans({'%count%': studio.activities|length}) }} · {{ studio.disciplines|map(d => d|trans)|join(', ') }}</p>
                         <div class="mt-auto d-flex gap-2">
-                            <a href="{{ path('app_manage_studio_show', {id: studio.id}) }}" class="btn btn-primary btn-sm">Planning et cours</a>
-                            <a href="{{ path('app_manage_studio_edit', {id: studio.id}) }}" class="btn btn-outline-primary btn-sm">Modifier</a>
+                            <a href="{{ path('app_manage_studio_show', {id: studio.id}) }}" class="btn btn-primary btn-sm">{{ 'manage.dashboard.schedule'|trans }}</a>
+                            <a href="{{ path('app_manage_studio_edit', {id: studio.id}) }}" class="btn btn-outline-primary btn-sm">{{ 'common.edit'|trans }}</a>
                             {% if studio.published %}
-                                <a href="{{ path('app_studio_show', {slug: studio.slug}) }}" class="btn btn-link btn-sm ms-auto">Voir la page publique <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                                <a href="{{ path('app_studio_show', {slug: studio.slug}) }}" class="btn btn-link btn-sm ms-auto">{{ 'manage.studio.public_page'|trans }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
                             {% endif %}
                         </div>
                     </div>

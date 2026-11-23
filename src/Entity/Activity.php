@@ -29,7 +29,7 @@ class Activity implements \Stringable
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull(message: 'Choisissez une discipline.')]
+    #[Assert\NotNull(message: 'activity.discipline.required')]
     // Nullable in PHP so that the form can bind an empty choice; validation guarantees a value before flush.
     private ?Discipline $discipline = null; // @phpstan-ignore doctrine.associationType
 
@@ -57,7 +57,7 @@ class Activity implements \Stringable
      * @var Collection<int, ClassSession>
      */
     #[ORM\OneToMany(targetEntity: ClassSession::class, mappedBy: 'activity', orphanRemoval: true)]
-    #[ORM\OrderBy(['startsAt' => 'ASC'])]
+    #[ORM\OrderBy(['startsAt' => \SortDirection::Ascending])]
     private Collection $sessions;
 
     public function __construct(Studio $studio)

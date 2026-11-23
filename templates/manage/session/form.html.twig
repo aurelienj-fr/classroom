@@ -2,12 +2,12 @@
 
 {% set studio = activity.studio %}
 
-{% block title %}{{ session ? 'Modifier la séance' : 'Planifier une séance' }} — {{ activity.name }}{% endblock %}
+{% block title %}{{ session ? 'manage.session.edit_title'|trans : 'manage.session.new'|trans }} — {{ activity.name }}{% endblock %}
 
 {% block body %}
-    <nav aria-label="Fil d'Ariane" class="mb-3">
+    <nav aria-label="{{ 'common.breadcrumb'|trans }}" class="mb-3">
         <ol class="breadcrumb small">
-            <li class="breadcrumb-item"><a href="{{ path('app_manage_dashboard') }}">Mes studios</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_manage_dashboard') }}">{{ 'manage.my_studios'|trans }}</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_manage_studio_show', {id: studio.id}) }}">{{ studio.name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ activity.name }}</li>
         </ol>
@@ -16,8 +16,8 @@
     <div class="row justify-content-center">
         <div class="col-lg-7">
             <div class="ms-card p-4 p-lg-5">
-                <h1 class="h3 mb-1">{{ session ? 'Modifier la séance' : 'Planifier une séance' }}</h1>
-                <p class="text-body-secondary mb-4">{{ activity.name }} · {{ activity.durationMinutes }} min</p>
+                <h1 class="h3 mb-1">{{ session ? 'manage.session.edit_title'|trans : 'manage.session.new'|trans }}</h1>
+                <p class="text-body-secondary mb-4">{{ activity.name }} · {{ 'common.minutes'|trans({'%count%': activity.durationMinutes}) }}</p>
                 {{ form_start(form) }}
                     {{ form_row(form.startsAt) }}
                     <div class="row g-3">
@@ -28,8 +28,8 @@
                         {{ form_row(form.weeklyRepetitions) }}
                     {% endif %}
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">Enregistrer</button>
-                        <a href="{{ session ? path('app_manage_session_show', {id: session.id}) : path('app_manage_studio_show', {id: studio.id}) }}" class="btn btn-link">Annuler</a>
+                        <button type="submit" class="btn btn-primary">{{ 'common.save'|trans }}</button>
+                        <a href="{{ session ? path('app_manage_session_show', {id: session.id}) : path('app_manage_studio_show', {id: studio.id}) }}" class="btn btn-link">{{ 'common.cancel'|trans }}</a>
                     </div>
                 {{ form_end(form) }}
             </div>

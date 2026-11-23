@@ -23,7 +23,7 @@ final class StudioController extends AbstractController
     /** How many weeks ahead the public planning can be browsed. */
     private const int MAX_WEEK_OFFSET = 12;
 
-    #[Route('/studios', name: 'app_studio_index', methods: ['GET'])]
+    #[Route(['fr' => '/studios', 'en' => '/studios', 'es' => '/estudios'], name: 'app_studio_index', methods: ['GET'])]
     public function index(
         StudioRepository $studioRepository,
         DisciplineRepository $disciplineRepository,
@@ -42,7 +42,7 @@ final class StudioController extends AbstractController
         ]);
     }
 
-    #[Route('/studios/{slug}', name: 'app_studio_show', requirements: ['slug' => '[a-z0-9-]+'], methods: ['GET'])]
+    #[Route(['fr' => '/studios/{slug}', 'en' => '/studios/{slug}', 'es' => '/estudios/{slug}'], name: 'app_studio_show', requirements: ['slug' => '[a-z0-9-]+'], methods: ['GET'])]
     public function show(
         string $slug,
         StudioRepository $studioRepository,
@@ -52,7 +52,7 @@ final class StudioController extends AbstractController
         #[MapQueryParameter] int $semaine = 0,
     ): Response {
         $studio = $studioRepository->findOnePublishedBySlug($slug)
-            ?? throw $this->createNotFoundException('Studio introuvable.');
+            ?? throw $this->createNotFoundException('Studio not found.');
 
         $now = $clock->now();
         $offset = max(0, min(self::MAX_WEEK_OFFSET, $semaine));

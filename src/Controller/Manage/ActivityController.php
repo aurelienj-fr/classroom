@@ -16,17 +16,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
 
-#[Route('/gestion')]
+#[Route(['fr' => '/gestion', 'en' => '/manage', 'es' => '/gestion'])]
 #[IsGranted(User::ROLE_OWNER)]
 final class ActivityController extends AbstractController
 {
-    #[Route('/studios/{id}/cours/nouveau', name: 'app_manage_activity_new', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route(['fr' => '/studios/{id}/cours/nouveau', 'en' => '/studios/{id}/activities/new', 'es' => '/estudios/{id}/actividades/nueva'], name: 'app_manage_activity_new', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     #[IsGranted(StudioVoter::MANAGE, subject: 'studio')]
     public function new(Studio $studio, Request $request, EntityManagerInterface $entityManager): Response
     {
         if ($studio->getDisciplines()->isEmpty()) {
-            $this->addFlash('warning', 'Associez d\'abord au moins une discipline à votre studio.');
+            $this->addFlash('warning', new TranslatableMessage('flash.activity.discipline_required'));
 
             return $this->redirectToRoute('app_manage_studio_edit', ['id' => $studio->getId()]);
         }
@@ -38,7 +39,7 @@ final class ActivityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($activity);
             $entityManager->flush();
-            $this->addFlash('success', 'Cours créé. Planifiez maintenant ses séances.');
+            $this->addFlash('success', new TranslatableMessage('flash.activity.created'));
 
             return $this->redirectToRoute('app_manage_session_new', ['id' => $activity->getId()]);
         }
@@ -50,7 +51,7 @@ final class ActivityController extends AbstractController
         ]);
     }
 
-    #[Route('/cours/{id}/modifier', name: 'app_manage_activity_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route(['fr' => '/cours/{id}/modifier', 'en' => '/activities/{id}/edit', 'es' => '/actividades/{id}/editar'], name: 'app_manage_activity_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     #[IsGranted(StudioVoter::MANAGE, subject: new Expression('args["activity"].getStudio()'))]
     public function edit(Activity $activity, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -59,7 +60,7 @@ final class ActivityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('success', 'Cours mis à jour. Les séances déjà planifiées conservent leur horaire.');
+            $this->addFlash('success', new TranslatableMessage('flash.activity.updated'));
 
             return $this->redirectToRoute('app_manage_studio_show', ['id' => $activity->getStudio()->getId()]);
         }

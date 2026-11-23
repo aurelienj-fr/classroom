@@ -1,10 +1,18 @@
+{% set locale = app.request.locale %}
+{% set current_route = app.current_route %}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ locale }}">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{% block title %}Réservez vos cours de sport et de bien-être{% endblock %} · monStudio</title>
-        <meta name="description" content="{% block meta_description %}Trouvez un studio près de chez vous et réservez vos cours de yoga, pilates, fitness ou danse en quelques clics.{% endblock %}">
+        <title>{% block title %}{{ 'meta.title_default'|trans }}{% endblock %} · monStudio</title>
+        <meta name="description" content="{% block meta_description %}{{ 'meta.description'|trans }}{% endblock %}">
+        {% if current_route %}
+            {% for alternate in app.enabled_locales %}
+                <link rel="alternate" hreflang="{{ alternate }}" href="{{ url(current_route, app.current_route_parameters|merge({_locale: alternate})) }}">
+            {% endfor %}
+            <link rel="alternate" hreflang="x-default" href="{{ url('app_root') }}">
+        {% endif %}
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><rect width=%22128%22 height=%22128%22 rx=%2228%22 fill=%22%230f766e%22/><text x=%2264%22 y=%2290%22 font-size=%2272%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22 font-weight=%22bold%22>m</text></svg>">
         <link rel="stylesheet" href="{{ asset('lib/bootstrap/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('lib/fontawesome/css/all.min.css') }}">
@@ -27,11 +35,11 @@
 
         <footer class="ms-footer py-4 mt-5">
             <div class="container d-flex flex-column flex-md-row justify-content-between gap-2 small text-body-secondary">
-                <span><strong class="text-body">monStudio</strong> — réservez vos cours en quelques clics.</span>
+                <span><strong class="text-body">monStudio</strong> — {{ 'footer.tagline'|trans }}</span>
                 <span>
-                    <a href="{{ path('app_studio_index') }}" class="link-secondary">Studios</a>
+                    <a href="{{ path('app_studio_index') }}" class="link-secondary">{{ 'footer.studios'|trans }}</a>
                     <span class="mx-2">·</span>
-                    <a href="{{ path('app_register') }}" class="link-secondary">Publier mon studio</a>
+                    <a href="{{ path('app_register') }}" class="link-secondary">{{ 'footer.publish'|trans }}</a>
                 </span>
             </div>
         </footer>

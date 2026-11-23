@@ -25,7 +25,7 @@ final class ClassSessionType extends AbstractType
     {
         $builder
             ->add('startsAt', DateTimeType::class, [
-                'label' => 'Début',
+                'label' => 'form.session.starts_at',
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable',
                 'with_seconds' => false,
@@ -35,24 +35,25 @@ final class ClassSessionType extends AbstractType
                         $session->setStartsAt($startsAt);
                     }
                 },
-                'constraints' => [new Assert\NotNull(message: 'Indiquez la date et l\'heure de début.')],
+                'constraints' => [new Assert\NotNull(message: 'session.starts_at.required')],
             ])
             ->add('capacity', IntegerType::class, [
-                'label' => 'Nombre de places',
+                'label' => 'form.session.capacity',
                 'empty_data' => '0',
                 'attr' => ['min' => 1, 'max' => 500],
             ])
             ->add('instructorName', TextType::class, [
-                'label' => 'Professeur',
+                'label' => 'form.session.instructor',
                 'required' => false,
             ]);
 
         if (true === $options['allow_repetition']) {
             $builder->add('weeklyRepetitions', IntegerType::class, [
-                'label' => 'Répéter chaque semaine pendant',
+                'label' => 'form.session.repetitions',
                 'mapped' => false,
                 'data' => 0,
-                'help' => \sprintf('Nombre de semaines supplémentaires (0 à %d).', SessionScheduler::MAX_WEEKLY_REPETITIONS),
+                'help' => 'form.session.repetitions_help',
+                'help_translation_parameters' => ['%max%' => SessionScheduler::MAX_WEEKLY_REPETITIONS],
                 'attr' => ['min' => 0, 'max' => SessionScheduler::MAX_WEEKLY_REPETITIONS],
                 'constraints' => [
                     new Assert\NotNull(),

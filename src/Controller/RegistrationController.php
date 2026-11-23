@@ -13,10 +13,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Translation\TranslatableMessage;
 
 final class RegistrationController extends AbstractController
 {
-    #[Route('/inscription', name: 'app_register', methods: ['GET', 'POST'])]
+    #[Route(['fr' => '/inscription', 'en' => '/sign-up', 'es' => '/registro'], name: 'app_register', methods: ['GET', 'POST'])]
     public function register(
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
@@ -45,7 +46,7 @@ final class RegistrationController extends AbstractController
             $entityManager->flush();
 
             $security->login($user, 'form_login', 'main');
-            $this->addFlash('success', \sprintf('Bienvenue sur monStudio, %s !', $user->getFirstName()));
+            $this->addFlash('success', new TranslatableMessage('flash.registration.welcome', ['%name%' => $user->getFirstName()]));
 
             return $this->redirectToRoute($isOwner ? 'app_manage_dashboard' : 'app_studio_index');
         }

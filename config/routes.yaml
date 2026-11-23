@@ -1,11 +1,21 @@
 # yaml-language-server: $schema=../vendor/symfony/routing/Loader/schema/routing.schema.json
 
-# This file is the entry point to configure the routes of your app.
-# Methods with the #[Route] attribute are automatically imported.
-# See also https://symfony.com/doc/current/routing.html
-
-# To list all registered routes, run the following command:
+# Routes are declared with #[Route] attributes; this file only imports them.
+# Every page lives under a locale prefix (/fr, /en, /es): path('route') keeps the current locale,
+# path('route', {_locale: 'en'}) switches it.
 #   bin/console debug:router
 
 controllers:
-    resource: routing.controllers
+    resource: '../src/Controller/**/*Controller.php'
+    type: attribute
+    exclude: '../src/Controller/LocaleController.php'
+    prefix:
+        fr: '/fr'
+        en: '/en'
+        es: '/es'
+    trailing_slash_on_root: false
+
+# Unprefixed entry point: redirects "/" to the visitor's preferred language.
+locale:
+    resource: '../src/Controller/LocaleController.php'
+    type: attribute

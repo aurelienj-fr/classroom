@@ -23,38 +23,38 @@ final class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstName', TextType::class, ['label' => 'Prénom', 'empty_data' => ''])
-            ->add('lastName', TextType::class, ['label' => 'Nom', 'empty_data' => ''])
-            ->add('email', EmailType::class, ['label' => 'Adresse e-mail', 'empty_data' => ''])
+            ->add('firstName', TextType::class, ['label' => 'form.user.first_name', 'empty_data' => ''])
+            ->add('lastName', TextType::class, ['label' => 'form.user.last_name', 'empty_data' => ''])
+            ->add('email', EmailType::class, ['label' => 'form.user.email', 'empty_data' => ''])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
                 'first_options' => [
-                    'label' => 'Mot de passe',
+                    'label' => 'form.user.password',
                     'attr' => ['autocomplete' => 'new-password'],
-                    'help' => '12 caractères minimum.',
+                    'help' => 'form.user.password_help',
                 ],
                 'second_options' => [
-                    'label' => 'Confirmation du mot de passe',
+                    'label' => 'form.user.password_confirm',
                     'attr' => ['autocomplete' => 'new-password'],
                 ],
-                'invalid_message' => 'Les mots de passe ne correspondent pas.',
+                'invalid_message' => 'user.password.mismatch',
                 'constraints' => [
-                    new Assert\NotBlank(message: 'Choisissez un mot de passe.'),
-                    new Assert\Length(min: 12, max: 4096, minMessage: 'Le mot de passe doit contenir au moins {{ limit }} caractères.'),
-                    new Assert\NotCompromisedPassword(message: 'Ce mot de passe figure dans une fuite de données connue, choisissez-en un autre.', skipOnError: true),
+                    new Assert\NotBlank(message: 'user.password.blank'),
+                    new Assert\Length(min: 12, max: 4096, minMessage: 'user.password.too_short'),
+                    new Assert\NotCompromisedPassword(message: 'user.password.compromised', skipOnError: true),
                 ],
             ])
             ->add('studioOwner', CheckboxType::class, [
-                'label' => 'Je gère un studio et souhaite publier mes cours',
+                'label' => 'form.user.studio_owner',
                 'mapped' => false,
                 'required' => false,
             ])
             ->add('agreeTerms', CheckboxType::class, [
-                'label' => 'J\'accepte les conditions d\'utilisation',
+                'label' => 'form.user.agree_terms',
                 'mapped' => false,
                 'constraints' => [
-                    new Assert\IsTrue(message: 'Vous devez accepter les conditions d\'utilisation.'),
+                    new Assert\IsTrue(message: 'user.terms.required'),
                 ],
             ]);
     }

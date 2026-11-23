@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes réservations{% endblock %}
+{% block title %}{{ 'nav.my_bookings'|trans }}{% endblock %}
 
 {% block body %}
-    <h1 class="h2 mb-4">Mes réservations</h1>
+    <h1 class="h2 mb-4">{{ 'nav.my_bookings'|trans }}</h1>
 
-    <h2 class="h5 mb-3">À venir</h2>
+    <h2 class="h5 mb-3">{{ 'account.upcoming'|trans }}</h2>
     {% if upcoming is empty %}
         <div class="ms-card p-4 mb-5 text-center">
-            <p class="text-body-secondary">Vous n'avez aucune réservation à venir.</p>
-            <a href="{{ path('app_studio_index') }}" class="btn btn-primary">Trouver un cours</a>
+            <p class="text-body-secondary">{{ 'account.no_upcoming'|trans }}</p>
+            <a href="{{ path('app_studio_index') }}" class="btn btn-primary">{{ 'nav.find_class'|trans }}</a>
         </div>
     {% else %}
         <div class="ms-card overflow-hidden mb-5">
@@ -17,8 +17,8 @@
                 {% set session = booking.session %}
                 <div class="ms-session flex-wrap{{ booking.confirmed ? '' : ' is-cancelled' }}">
                     <div class="ms-session-time is-wide">
-                        <div class="small text-body-secondary fw-normal">{{ session.startsAt|fr_date('day_short') }}</div>
-                        {{ session.startsAt|fr_date('time') }}
+                        <div class="small text-body-secondary fw-normal">{{ session.startsAt|local_date('day_short') }}</div>
+                        {{ session.startsAt|local_date('time') }}
                     </div>
                     <div class="flex-grow-1 min-w-0">
                         <a href="{{ path('app_session_show', {id: session.id}) }}" class="fw-semibold">{{ session.activity.name }}</a>
@@ -26,15 +26,15 @@
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         {% if session.cancelled %}
-                            <span class="badge text-bg-secondary">Séance annulée</span>
+                            <span class="badge text-bg-secondary">{{ 'account.session_cancelled'|trans }}</span>
                         {% elseif not booking.confirmed %}
-                            <span class="badge text-bg-light border">Réservation annulée</span>
+                            <span class="badge text-bg-light border">{{ 'account.booking_cancelled'|trans }}</span>
                         {% else %}
-                            <span class="badge text-bg-success">Confirmée</span>
+                            <span class="badge text-bg-success">{{ booking.status|trans }}</span>
                             {% if cancellable[booking.id] ?? false %}
-                                <form method="post" action="{{ path('app_account_booking_cancel', {id: booking.id}) }}" data-confirm="Annuler cette réservation ?">
+                                <form method="post" action="{{ path('app_account_booking_cancel', {id: booking.id}) }}" data-confirm="{{ 'account.cancel_confirm'|trans }}">
                                     <input type="hidden" name="_token" value="{{ csrf_token('cancel-booking-' ~ booking.id) }}">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">Annuler</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">{{ 'account.cancel'|trans }}</button>
                                 </form>
                             {% endif %}
                         {% endif %}
@@ -44,23 +44,23 @@
         </div>
     {% endif %}
 
-    <h2 class="h5 mb-3">Historique</h2>
+    <h2 class="h5 mb-3">{{ 'account.history'|trans }}</h2>
     {% if past is empty %}
-        <p class="text-body-secondary">Aucun cours passé pour le moment.</p>
+        <p class="text-body-secondary">{{ 'account.no_history'|trans }}</p>
     {% else %}
         <div class="ms-card overflow-hidden">
             {% for booking in past %}
                 {% set session = booking.session %}
                 <div class="ms-session is-past">
-                    <div class="ms-session-time is-date small">{{ session.startsAt|fr_date('date') }}</div>
+                    <div class="ms-session-time is-date small">{{ session.startsAt|local_date('date') }}</div>
                     <div class="flex-grow-1 min-w-0">
                         <span class="fw-semibold">{{ session.activity.name }}</span>
                         <div class="small text-body-secondary">{{ session.studio.name }}</div>
                     </div>
                     {% if booking.checkedInAt %}
-                        <span class="badge text-bg-success">Présent(e)</span>
+                        <span class="badge text-bg-success">{{ 'account.present'|trans }}</span>
                     {% elseif not booking.confirmed %}
-                        <span class="badge text-bg-light border">Annulée</span>
+                        <span class="badge text-bg-light border">{{ booking.status|trans }}</span>
                     {% endif %}
                 </div>
             {% endfor %}

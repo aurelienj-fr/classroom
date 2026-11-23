@@ -40,7 +40,7 @@ class Studio implements \Stringable
 
     #[ORM\Column(length: 10)]
     #[Assert\NotBlank]
-    #[Assert\Regex(pattern: '/^\d{5}$/', message: 'Code postal invalide (5 chiffres).')]
+    #[Assert\Regex(pattern: '/^\d{5}$/', message: 'studio.postal_code.invalid')]
     private string $postalCode = '';
 
     #[ORM\Column(length: 100)]
@@ -78,15 +78,15 @@ class Studio implements \Stringable
      * @var Collection<int, Discipline>
      */
     #[ORM\ManyToMany(targetEntity: Discipline::class)]
-    #[ORM\OrderBy(['name' => 'ASC'])]
-    #[Assert\Count(min: 1, minMessage: 'Sélectionnez au moins une discipline.')]
+    #[ORM\OrderBy(['name' => \SortDirection::Ascending])]
+    #[Assert\Count(min: 1, minMessage: 'studio.disciplines.required')]
     private Collection $disciplines;
 
     /**
      * @var Collection<int, Activity>
      */
     #[ORM\OneToMany(targetEntity: Activity::class, mappedBy: 'studio', orphanRemoval: true)]
-    #[ORM\OrderBy(['name' => 'ASC'])]
+    #[ORM\OrderBy(['name' => \SortDirection::Ascending])]
     private Collection $activities;
 
     public function __construct(User $owner)

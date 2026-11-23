@@ -15,7 +15,7 @@ final class ManageTest extends WebTestCaseHelper
     {
         $this->client->loginUser($this->data->user('member@example.test'));
 
-        $this->client->request('GET', '/gestion');
+        $this->client->request('GET', '/fr/gestion');
 
         self::assertResponseStatusCodeSame(403);
     }
@@ -25,10 +25,10 @@ final class ManageTest extends WebTestCaseHelper
         $studio = $this->data->studio($this->data->user('owner@example.test', [User::ROLE_OWNER]));
         $this->client->loginUser($this->data->user('other@example.test', [User::ROLE_OWNER]));
 
-        $this->client->request('GET', '/gestion/studios/'.$studio->getId());
+        $this->client->request('GET', '/fr/gestion/studios/'.$studio->getId());
         self::assertResponseStatusCodeSame(403);
 
-        $this->client->request('GET', '/gestion/studios/'.$studio->getId().'/modifier');
+        $this->client->request('GET', '/fr/gestion/studios/'.$studio->getId().'/modifier');
         self::assertResponseStatusCodeSame(403);
     }
 
@@ -37,7 +37,7 @@ final class ManageTest extends WebTestCaseHelper
         $studio = $this->data->studio($this->data->user('owner@example.test', [User::ROLE_OWNER]), 'Atelier Soleil');
         $this->client->loginUser($this->data->user('admin@example.test', [User::ROLE_ADMIN]));
 
-        $this->client->request('GET', '/gestion/studios/'.$studio->getId());
+        $this->client->request('GET', '/fr/gestion/studios/'.$studio->getId());
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Atelier Soleil');
@@ -49,7 +49,7 @@ final class ManageTest extends WebTestCaseHelper
         $discipline = $this->data->discipline('Pilates');
         $this->client->loginUser($owner);
 
-        $this->client->request('GET', '/gestion/studios/nouveau');
+        $this->client->request('GET', '/fr/gestion/studios/nouveau');
         $this->client->submitForm('Enregistrer', [
             'studio[name]' => 'Atelier Neuf',
             'studio[disciplines]' => [(string) $discipline->getId()],
@@ -66,7 +66,7 @@ final class ManageTest extends WebTestCaseHelper
         self::assertSame('atelier-neuf-nantes', $studio->getSlug());
         self::assertSame($owner->getId(), $studio->getOwner()->getId());
 
-        $this->client->request('GET', '/gestion/studios/'.$studio->getId().'/cours/nouveau');
+        $this->client->request('GET', '/fr/gestion/studios/'.$studio->getId().'/cours/nouveau');
         $this->client->submitForm('Enregistrer', [
             'activity[name]' => 'Pilates reformer',
             'activity[discipline]' => (string) $discipline->getId(),
@@ -83,7 +83,7 @@ final class ManageTest extends WebTestCaseHelper
             'class_session[instructorName]' => 'Julie',
             'class_session[weeklyRepetitions]' => '2',
         ]);
-        self::assertResponseRedirects('/gestion/studios/'.$studio->getId());
+        self::assertResponseRedirects('/fr/gestion/studios/'.$studio->getId());
 
         $sessions = $this->entityManager()->getRepository(ClassSession::class)->findBy([], ['startsAt' => 'ASC']);
         self::assertCount(3, $sessions);
@@ -98,7 +98,7 @@ final class ManageTest extends WebTestCaseHelper
         $activity = $this->data->session($studio, new \DateTimeImmutable('2026-11-30 10:00'))->getActivity();
         $this->client->loginUser($owner);
 
-        $this->client->request('GET', '/gestion/cours/'.$activity->getId().'/seances/nouvelle');
+        $this->client->request('GET', '/fr/gestion/cours/'.$activity->getId().'/seances/nouvelle');
         $this->client->submitForm('Enregistrer', [
             'class_session[startsAt]' => '2026-11-01T10:00',
             'class_session[capacity]' => '10',
@@ -119,7 +119,7 @@ final class ManageTest extends WebTestCaseHelper
         $this->entityManager()->flush();
         $this->client->loginUser($owner);
 
-        $this->client->request('GET', '/gestion/seances/'.$session->getId().'/modifier');
+        $this->client->request('GET', '/fr/gestion/seances/'.$session->getId().'/modifier');
         $this->client->submitForm('Enregistrer', ['class_session[capacity]' => '2']);
 
         self::assertResponseStatusCodeSame(422);
@@ -135,10 +135,10 @@ final class ManageTest extends WebTestCaseHelper
         $this->entityManager()->flush();
         $this->client->loginUser($owner);
 
-        $this->client->request('GET', '/gestion/seances/'.$session->getId());
+        $this->client->request('GET', '/fr/gestion/seances/'.$session->getId());
         $this->client->submitForm('Pointer');
 
-        self::assertResponseRedirects('/gestion/seances/'.$session->getId());
+        self::assertResponseRedirects('/fr/gestion/seances/'.$session->getId());
         $booking = $this->entityManager()->getRepository(Booking::class)->find($booking->getId());
         self::assertNotNull($booking?->getCheckedInAt());
     }

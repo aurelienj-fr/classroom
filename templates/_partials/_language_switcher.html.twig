@@ -1,0 +1,21 @@
+{# Links to the current page in every enabled language (home page when the route is unknown, e.g. error pages). #}
+{# The router generates the right localized variant from any variant name plus _locale. #}
+{% set current_route = app.current_route %}
+{% set labels = {fr: 'Français', en: 'English', es: 'Español'} %}
+<div class="dropdown">
+    <button class="btn btn-light border dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'nav.language'|trans }}">
+        <i class="fa-solid fa-globe me-1" aria-hidden="true"></i>{{ app.request.locale|upper }}
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end">
+        {% for locale in app.enabled_locales %}
+            {% set href = current_route
+                ? path(current_route, app.current_route_parameters|merge(app.request.query.all)|merge({_locale: locale}))
+                : path('app_home', {_locale: locale}) %}
+            <li>
+                <a class="dropdown-item{{ locale == app.request.locale ? ' active' }}" href="{{ href }}" hreflang="{{ locale }}" lang="{{ locale }}"{% if locale == app.request.locale %} aria-current="true"{% endif %}>
+                    {{ labels[locale] ?? locale|upper }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
