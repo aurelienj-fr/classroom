@@ -3,6 +3,7 @@ meta:
     description: 'Trouvez un studio près de chez vous et réservez vos cours de yoga, pilates, fitness ou danse en quelques clics.'
 
 nav:
+    profile: 'Mon profil'
     find_class: 'Trouver un cours'
     my_bookings: 'Mes réservations'
     manage: 'Gérer mes studios'
@@ -44,6 +45,11 @@ owner_request:
         pending: 'En attente'
         approved: 'Validée'
         rejected: 'Refusée'
+
+profile:
+    identity: 'Identité et connexion'
+    password: 'Mot de passe'
+    change_password: 'Changer le mot de passe'
 
 search:
     city: 'Ville ou code postal'
@@ -146,6 +152,8 @@ registration:
 form:
     choose: 'Choisir…'
     user:
+        current_password: 'Mot de passe actuel'
+        new_password: 'Nouveau mot de passe'
         first_name: 'Prénom'
         last_name: 'Nom'
         email: 'Adresse e-mail'
@@ -189,6 +197,9 @@ form:
         icon_help: "Nom de l'icône sans le préfixe « fa- » (ex. : dumbbell, person-swimming)."
 
 flash:
+    profile:
+        updated: 'Votre profil a été mis à jour.'
+        password_changed: 'Votre mot de passe a été changé.'
     owner_relinquish:
         done: 'Vous êtes redevenu(e) simple usager. Studios dépubliés : %studios%. Séances annulées : %sessions%.'
         admin: 'Un administrateur conserve ses droits de gestion.'

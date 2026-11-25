@@ -3,6 +3,7 @@ meta:
     description: 'Encuentra un estudio cerca de ti y reserva clases de yoga, pilates, fitness o danza en pocos clics.'
 
 nav:
+    profile: 'Mi perfil'
     find_class: 'Buscar una clase'
     my_bookings: 'Mis reservas'
     manage: 'Gestionar mis estudios'
@@ -44,6 +45,11 @@ owner_request:
         pending: 'Pendiente'
         approved: 'Aprobada'
         rejected: 'Rechazada'
+
+profile:
+    identity: 'Identidad e inicio de sesión'
+    password: 'Contraseña'
+    change_password: 'Cambiar la contraseña'
 
 search:
     city: 'Ciudad o código postal'
@@ -146,6 +152,8 @@ registration:
 form:
     choose: 'Elegir…'
     user:
+        current_password: 'Contraseña actual'
+        new_password: 'Nueva contraseña'
         first_name: 'Nombre'
         last_name: 'Apellidos'
         email: 'Correo electrónico'
@@ -189,6 +197,9 @@ form:
         icon_help: 'Nombre del icono sin el prefijo «fa-» (p. ej.: dumbbell, person-swimming).'
 
 flash:
+    profile:
+        updated: 'Tu perfil se ha actualizado.'
+        password_changed: 'Tu contraseña se ha cambiado.'
     owner_relinquish:
         done: 'Vuelves a ser un usuario normal. Estudios despublicados: %studios%. Sesiones canceladas: %sessions%.'
         admin: 'Los administradores conservan sus derechos de gestión.'

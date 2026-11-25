@@ -2,6 +2,7 @@ user:
     email:
         already_used: 'Un compte existe déjà avec cette adresse e-mail.'
     password:
+        wrong_current: 'Le mot de passe actuel est incorrect.'
         blank: 'Choisissez un mot de passe.'
         too_short: 'Le mot de passe doit contenir au moins {{ limit }} caractères.'
         compromised: 'Ce mot de passe figure dans une fuite de données connue, choisissez-en un autre.'

@@ -4,6 +4,25 @@ Ce guide déploie monStudio sur un hébergement PHP classique, **sans Docker, sa
 
 > Les procédures des hébergeurs évoluent : les chemins de menus et noms d'options cités ci-dessous sont à vérifier dans leur documentation (liens en fin de page).
 
+## alwaysdata (offre gratuite) — configuration de myclassroom
+
+Particularités constatées, à vérifier dans l'interface d'administration :
+
+- **SSH et SFTP** disponibles sur toutes les offres, tâches planifiées avec syntaxe cron ;
+- **offre gratuite** : uniquement l'adresse `myclassroom.alwaysdata.net` (pas de domaine personnel), usage personnel et non commercial, 1 Go d'espace ;
+- **e-mails** : les adresses se créent dans « Emails > Adresses » sur un domaine ; une adresse en `@myclassroom.alwaysdata.net` n'est pas confirmée par la documentation. L'**envoi** SMTP depuis les serveurs alwaysdata ne demande pas d'authentification (`smtp-myclassroom.alwaysdata.net`, port 587 ou 465).
+
+Étapes :
+
+1. **Base** : « Bases de données > MySQL » > créer une base et un utilisateur. Dans phpMyAdmin, importer le fichier SQL d'initialisation (schéma, disciplines, administrateur).
+2. **Configuration** : partir de `deploy/env.prod.local.dist` (ou du fichier préparé pour le compte), renseigner l'utilisateur, le mot de passe et le nom de la base dans `DATABASE_URL`, enregistrer sous `.env.prod.local`, puis `bin/build-release`.
+3. **Fichiers** : envoyer le contenu de `build/release/` par SFTP dans `$HOME/www/monstudio/`.
+4. **Site** : « Web > Sites » > site `myclassroom.alwaysdata.net` : type **PHP**, version **8.4**, **répertoire racine** `/www/monstudio/public/`. Régler aussi PHP 8.4 pour la ligne de commande (« Environnement »).
+5. **Tâche planifiée** : « Avancé > Tâches planifiées » > type commande, `php $HOME/www/monstudio/bin/cron.php`, fréquence horaire (ou toutes les 15 minutes).
+6. **Premier accès** : se connecter avec le compte administrateur, puis « Mon profil » pour remplacer le mot de passe temporaire (et l'adresse e-mail si besoin).
+
+Si l'envoi d'e-mails est refusé (expéditeur `noreply@myclassroom.alwaysdata.net` non accepté), créer une adresse sur un domaine dont vous disposez, ou utiliser un service SMTP externe, puis adapter `MAILER_DSN` et `MAILER_FROM`.
+
 ## 1. Ce qu'il faut chez l'hébergeur
 
 | Élément | Exigence |
@@ -113,6 +132,10 @@ Avec SSH, les étapes 2 à 4 se remplacent par `php bin/console doctrine:migrati
 - Pour passer à un VPS plus tard : `MESSENGER_CONSUME_ON_TERMINATE=0` et le service `worker` (`messenger:consume async`) du `compose.yaml`.
 
 ## Sources
+
+- [alwaysdata — Utiliser une adresse e-mail (SMTP, IMAP)](https://help.alwaysdata.com/en/e-mails/use-an-e-mail-address)
+- [alwaysdata — Tâches planifiées](https://help.alwaysdata.com/en/docs/web-hosting/tasks/)
+- [alwaysdata — Offres](https://www.alwaysdata.com/fr/offers/)
 
 - [OVHcloud — Environnement, version PHP, « .ovhconfig »](https://docs.ovhcloud.com/fr/guides/web-cloud/web-hosting/configure-your-web-hosting)
 - [OVHcloud — Versions disponibles des langages](https://docs.ovhcloud.com/fr/guides/web-cloud/web-hosting/web-hosting-main-info)

@@ -3,6 +3,7 @@ meta:
     description: 'Find a studio near you and book yoga, Pilates, fitness or dance classes in a few clicks.'
 
 nav:
+    profile: 'My profile'
     find_class: 'Find a class'
     my_bookings: 'My bookings'
     manage: 'Manage my studios'
@@ -44,6 +45,11 @@ owner_request:
         pending: 'Pending'
         approved: 'Approved'
         rejected: 'Rejected'
+
+profile:
+    identity: 'Identity and login'
+    password: 'Password'
+    change_password: 'Change password'
 
 search:
     city: 'City or postcode'
@@ -146,6 +152,8 @@ registration:
 form:
     choose: 'Choose…'
     user:
+        current_password: 'Current password'
+        new_password: 'New password'
         first_name: 'First name'
         last_name: 'Last name'
         email: 'Email address'
@@ -189,6 +197,9 @@ form:
         icon_help: 'Icon name without the "fa-" prefix (e.g. dumbbell, person-swimming).'
 
 flash:
+    profile:
+        updated: 'Your profile has been updated.'
+        password_changed: 'Your password has been changed.'
     owner_relinquish:
         done: 'You are now a regular member. Studios unpublished: %studios%. Sessions cancelled: %sessions%.'
         admin: 'Administrators keep their management rights.'
